@@ -1,0 +1,20 @@
+h1 Edit
+
+form action="/_save" method="POST"
+  - if @post.id
+    input type="hidden" name="id" value=(@post.id)
+  div
+    ' Title
+    input type="text" name="title" size=80 value=(@post.title)
+  div
+    ' Slug(optional)
+    input type="text" name="slug" size=40 value=(@post.slug)
+  div
+    textarea name="body" rows=20 cols=100
+      = @post.body
+  div
+    input type="checkbox" name="visible" value="y" checked=(@post.visible)
+    ' Publish
+  div
+    input type="submit" name="submit_by" value="Preview"
+    input type="submit" name="submit_by" value="Save"
