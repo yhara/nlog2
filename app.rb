@@ -7,7 +7,8 @@ require "sinatra/activerecord"
 #class Book < ActiveRecord::Base
 #end
 
-class MyApp < Sinatra::Base
+class NLog2 < Sinatra::Base
+
   register Sinatra::ActiveRecordExtension
   configure(:development){ register Sinatra::Reloader }
 

@@ -1,4 +1,4 @@
 require "bundler/setup"
 require "./app.rb"
 
-run MyApp
+run NLog2
