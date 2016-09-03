@@ -15,9 +15,9 @@ ActiveRecord::Schema.define(version: 20160816171816) do
   create_table "posts", force: :cascade do |t|
     t.string   "title"
     t.string   "slug"
-    t.datetime "published_at"
+    t.datetime "datetime"
     t.text     "body"
-    t.boolean  "published"
+    t.datetime "published_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
