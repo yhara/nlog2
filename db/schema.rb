@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20160816171816) do
     t.datetime "datetime"
     t.text     "body"
     t.datetime "published_at"
+    t.boolean  "visible"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

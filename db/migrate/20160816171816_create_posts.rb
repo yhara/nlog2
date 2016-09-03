@@ -6,6 +6,7 @@ class CreatePosts < ActiveRecord::Migration
       t.datetime :datetime
       t.text :body
       t.datetime :published_at
+      t.boolean :visible
 
       t.timestamps
     end
