@@ -1,3 +1,4 @@
+require 'digest'
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'slim'
@@ -30,6 +31,23 @@ class NLog2 < Sinatra::Base
   register Sinatra::ActiveRecordExtension
   configure(:development){ register Sinatra::Reloader }
 
+  def authenticate!
+    return if authorized?
+    headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+    halt 401, "Not authorized\n"
+  end
+
+  def authorized?
+    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+    return false unless (@auth.provided? and @auth.basic? and @auth.credentials)
+    username, password = *@auth.credentials
+    salt = NLog2.config[:auth][:salt] 
+    hashed = Digest::SHA256.hexdigest(password + salt)
+
+    return (username == NLog2.config[:auth][:username]) &&
+           (hashed == NLog2.config[:auth][:password_hash])
+  end
+
   get '/(\d\d\d\d)/(\d\d)/(\d\d)/:slug' do
     date = Date.new(*params[:captures])
     @post = Post.find_by!(posted_on: date, published: true)
@@ -37,6 +55,7 @@ class NLog2 < Sinatra::Base
   end
 
   get '/_draft/:id' do
+    authenticate!
     @post = Post.unscoped.find_by!(id: params[:id], published: false)
     slim :show
   end
@@ -56,6 +75,7 @@ class NLog2 < Sinatra::Base
   
   get '/_edit' do redirect '/_edit/' end
   get '/_edit/:id?' do
+    authenticate!
     if (id = params[:id])
       @post = Post.find_by!(id: id)
     else
@@ -65,6 +85,7 @@ class NLog2 < Sinatra::Base
   end
 
   post '/_save' do
+    authenticate!
     if (id = params[:id])
       @post = Post.find_by!(id: id)
     else

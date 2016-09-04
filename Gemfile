@@ -7,6 +7,9 @@ gem 'sinatra-contrib'
 gem 'slim'
 gem 'sass'
 
+# Config
+gem 'io-console'
+
 # Database 
 gem 'sinatra-activerecord'
 gem 'sqlite3'
