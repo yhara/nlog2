@@ -24,6 +24,9 @@ end
 class NLog2 < Sinatra::Base
   class NotFound < StandardError; end
 
+  def self.config; @@config or raise; end
+  def self.config=(c); @@config = c; end
+
   register Sinatra::ActiveRecordExtension
   configure(:development){ register Sinatra::Reloader }
 
@@ -81,3 +84,5 @@ class NLog2 < Sinatra::Base
     end
   end
 end
+
+NLog2.config = YAML.load_file("#{__dir__}/config/nlog2.yml")

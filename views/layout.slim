@@ -2,7 +2,7 @@ doctype html
 html
   head
     meta charset="utf-8"
-    title Sinatra Project Template
+    title=(NLog2.config[:blog][:title])
     link rel="stylesheet" href="/screen.css" type="text/css"
     script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"
 
@@ -11,5 +11,5 @@ html
       a href='/_edit' Edit
 
     h1
-      a href='/' blog title
+      a href='/' =(NLog2.config[:blog][:title])
     == yield
