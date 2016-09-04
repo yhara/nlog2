@@ -1,8 +1,12 @@
-h1 Edit
+.flash
+  .error=@flash_error
 
 form action="/_save" method="POST"
   - if @post.id
     input type="hidden" name="id" value=(@post.id)
+  div
+    ' Date
+    input type="text" name="datetime" size=80 value=(@post.datetime.to_s)
   div
     ' Title
     input type="text" name="title" size=80 value=(@post.title)

@@ -8,13 +8,19 @@ describe 'NLog2' do
 
   before :all do
     Post.delete_all
+    @valid_params = {
+      title: "TITLE",
+      slug: "SLUG",
+      body: "BODY",
+      datetime: Time.now.to_s,
+    }
   end
 
   before :each do
     @now = Time.now.utc
   end
 
-  describe '/_edit' do
+  describe '/_edit (no trailing slash)' do
     it 'should redirect to /_edit/' do
       get '/_edit'
       expect(last_response).to be_redirect
@@ -46,8 +52,7 @@ describe 'NLog2' do
       count = Post.count
 
       authorize 'jhon', 'passw0rd'
-      post '/_save', title: "TITLE", slug: "SLUG", body: "BODY",
-                     submit_by: "Preview"
+      post '/_save', @valid_params.merge(submit_by: "Preview")
 
       expect(Post.count).to eq(count)
     end
@@ -57,8 +62,7 @@ describe 'NLog2' do
     it 'creates a draft post' do
       count = Post.count
       authorize 'jhon', 'passw0rd'
-      post '/_save', title: "TITLE", slug: "SLUG", body: "BODY",
-                     submit_by: "Save"
+      post '/_save', @valid_params.merge(submit_by: "Save")
       expect(Post.count).to eq(count+1)
       expect(last_response).to be_redirect
 
@@ -76,8 +80,7 @@ describe 'NLog2' do
       count = Post.count
       Timecop.freeze(@now) do
         authorize 'jhon', 'passw0rd'
-        post '/_save', title: "TITLE", slug: "SLUG", body: "BODY",
-                       visible: "y", submit_by: "Save"
+        post '/_save', @valid_params.merge(visible: "y", submit_by: "Save")
       end
       expect(Post.count).to eq(count+1)
       expect(last_response).to be_redirect
@@ -97,6 +100,7 @@ describe 'NLog2' do
 
       authorize 'jhon', 'passw0rd'
       post '/_save', title: "TITLE2", slug: "SLUG2", body: "BODY2",
+                     datetime: "1234-12-12 12:12:12",
                      visible: "y", id: existing.id, submit_by: "Save"
 
       updated = Post.find_by!(id: existing.id)
@@ -105,7 +109,7 @@ describe 'NLog2' do
       expect(updated.body).to eq("BODY2")
       expect(updated.visible).to eq(true)
       expect(last_response.header["Location"]).to(
-        end_with(@now.strftime("/%Y/%m/%d/SLUG2")))
+        end_with("/1234/12/12/SLUG2"))
     end
   end
 end

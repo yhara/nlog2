@@ -1,4 +1,5 @@
 require 'digest'
+require 'time'
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'slim'
@@ -11,7 +12,7 @@ class Post < ActiveRecord::Base
 
   def path_to_show
     if self.published_at
-      self.published_at.strftime("/%Y/%m/%d/#{slug_or_id}")
+      self.datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
     else
       "/_draft/#{self.id}"
     end
@@ -80,23 +81,31 @@ class NLog2 < Sinatra::Base
       @post = Post.find_by!(id: id)
     else
       @post = Post.new
+      @post.datetime = Time.now
     end
     slim :edit
   end
 
   post '/_save' do
     authenticate!
+    @flash_error = nil
     if (id = params[:id])
       @post = Post.find_by!(id: id)
     else
       @post = Post.new
     end
+
     @post.title = params[:title]
     @post.slug = params[:slug]
     @post.body = params[:body]
     @post.visible = (params[:visible] == "y")
+    begin
+      @post.datetime = Time.parse(params[:datetime])
+    rescue ArgumentError
+      @flash_error = "Failed to parse date"
+    end
 
-    if params[:submit_by] == "Save"
+    if params[:submit_by] == "Save" && !@flash_error
       @post.published_at ||= Time.now if @post.visible
       @post.save!
       redirect @post.path_to_show
