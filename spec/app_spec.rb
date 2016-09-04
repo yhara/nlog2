@@ -25,6 +25,7 @@ describe 'NLog2' do
   describe '/_edit/' do
     it 'should show editor' do
       post = Post.create!(title: "TITLE", slug: "SLUG", body: "BODY")
+      authorize 'jhon', 'passw0rd'
       get "/_edit/#{post.id}"
       expect(last_response).to be_ok
       expect(last_response.body).to include("TITLE")
@@ -33,6 +34,7 @@ describe 'NLog2' do
 
   describe '/_edit/:id' do
     it 'should show editor' do
+      authorize 'jhon', 'passw0rd'
       get '/_edit/'
       expect(last_response).to be_ok
       expect(last_response.body).to include("form")
@@ -43,6 +45,7 @@ describe 'NLog2' do
     it 'should not create a record' do
       count = Post.count
 
+      authorize 'jhon', 'passw0rd'
       post '/_save', title: "TITLE", slug: "SLUG", body: "BODY",
                      submit_by: "Preview"
 
@@ -53,6 +56,7 @@ describe 'NLog2' do
   describe '/_save (Save)' do
     it 'creates a draft post' do
       count = Post.count
+      authorize 'jhon', 'passw0rd'
       post '/_save', title: "TITLE", slug: "SLUG", body: "BODY",
                      submit_by: "Save"
       expect(Post.count).to eq(count+1)
@@ -71,6 +75,7 @@ describe 'NLog2' do
     it 'creates a public post' do
       count = Post.count
       Timecop.freeze(@now) do
+        authorize 'jhon', 'passw0rd'
         post '/_save', title: "TITLE", slug: "SLUG", body: "BODY",
                        visible: "y", submit_by: "Save"
       end
@@ -89,8 +94,8 @@ describe 'NLog2' do
 
     it 'updates a post' do
       existing = Post.create!(title: "TITLE", slug: "SLUG", body: "BODY")
-      #p ok: existing.save!, existing: existing
-      #p count: Post.count
+
+      authorize 'jhon', 'passw0rd'
       post '/_save', title: "TITLE2", slug: "SLUG2", body: "BODY2",
                      visible: "y", id: existing.id, submit_by: "Save"
 

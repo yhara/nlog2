@@ -5,6 +5,8 @@ require 'timecop'
 
 require_relative '../app.rb'
 
+NLog2.config = YAML.load_file("#{__dir__}/../config/nlog2.yml.example")
+
 RSpec.configure do |config|
   config.before(:suite) do
     #DatabaseRewinder.clean_all
