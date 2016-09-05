@@ -7,7 +7,6 @@ describe 'NLog2' do
   end
 
   before :all do
-    Post.delete_all
     @valid_params = {
       title: "TITLE",
       slug: "SLUG",
@@ -17,7 +16,46 @@ describe 'NLog2' do
   end
 
   before :each do
+    Post.delete_all
     @now = Time.now.utc
+  end
+
+  describe '/yyyy/dd/mm/xx' do
+    context 'when post is visible' do
+      it 'should show post matching slug' do
+        Post.create!(@valid_params.merge(
+          slug: "this-is-slug",
+          body: "this is body",
+          datetime: Time.utc(1234, 12, 12),
+          visible: true
+        ))
+        get '/1234/12/12/this-is-slug'
+        expect(last_response.body).to include("this is body")
+      end
+
+      it 'should show post matching id' do
+        post = Post.create!(@valid_params.merge(
+          slug: nil,
+          datetime: Time.utc(1234, 12, 12),
+          body: "this is body",
+          visible: true
+        ))
+        get "/1234/12/12/#{post.id}"
+        expect(last_response.body).to include("this is body")
+      end
+    end
+
+    context 'when post is invisible' do
+      it 'should not show post matching slug' do
+        Post.create!(@valid_params.merge(
+          slug: "this-is-slug",
+          datetime: Time.utc(1234, 12, 12),
+          visible: false
+        ))
+        get '/1234/12/12/this-is-slug'
+        expect(last_response).to be_not_found
+      end
+    end
   end
 
   describe '/_edit (no trailing slash)' do

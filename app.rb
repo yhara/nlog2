@@ -5,6 +5,7 @@ require 'sinatra/reloader'
 require 'slim'
 require 'sass'
 require "sinatra/activerecord"
+require 'active_support/core_ext/date'
 
 class Post < ActiveRecord::Base
   validates_presence_of :body
@@ -49,9 +50,26 @@ class NLog2 < Sinatra::Base
            (hashed == NLog2.config[:auth][:password_hash])
   end
 
-  get '/(\d\d\d\d)/(\d\d)/(\d\d)/:slug' do
-    date = Date.new(*params[:captures])
-    @post = Post.find_by!(posted_on: date, published: true)
+  error ActiveRecord::RecordNotFound do
+    halt 404, 'not found'
+  end
+
+  #
+  # Show
+  #
+
+  get %r{(\d\d\d\d)/(\d\d)/(\d\d)/(.+)} do
+    *date, slug_or_id = *params[:captures]
+    d = Date.new(*date.map(&:to_i))
+    range = d.to_time(:utc)...(d+1).to_time(:utc)
+
+    cond = Post.where(slug: slug_or_id)
+    if (id = Integer(slug_or_id) rescue nil)
+      cond = cond.or(Post.where(id: id))
+    end
+
+    @post = cond.where(datetime: range, visible: true).first!
+
     slim :show
   end
 
