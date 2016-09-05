@@ -4,8 +4,9 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require 'slim'
 require 'sass'
-require "sinatra/activerecord"
+require 'sinatra/activerecord'
 require 'active_support/core_ext/date'
+require 'redcarpet'
 
 class Post < ActiveRecord::Base
   validates_presence_of :body
@@ -21,6 +22,18 @@ class Post < ActiveRecord::Base
 
   def slug_or_id
     self.slug or self.id
+  end
+
+  def rendered_body
+    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
+      no_intra_emphasis: true,
+      tables: true,
+      fenced_code_blocks: true,
+      autolink: true,
+      strikethrough: true,
+      footnotes: true,
+    )
+    markdown.render(self.body)
   end
 end
 

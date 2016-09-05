@@ -10,6 +10,9 @@ gem 'sass'
 # Config
 gem 'io-console'
 
+# View
+gem 'redcarpet'
+
 # Database 
 gem 'sinatra-activerecord'
 gem 'sqlite3'
