@@ -19,6 +19,11 @@ class Post < ActiveRecord::Base
       "/_draft/#{self.id}"
     end
   end
+  
+  def local_date
+    zone = Time.find_zone!(NLog2.config[:timezone])
+    self.datetime.in_time_zone(zone).to_date
+  end
 
   def slug_or_id
     self.slug or self.id
