@@ -134,7 +134,7 @@ describe 'NLog2' do
     end
 
     it 'updates a post' do
-      existing = Post.create!(title: "TITLE", slug: "SLUG", body: "BODY")
+      existing = Post.create!(@valid_params)
 
       authorize 'jhon', 'passw0rd'
       post '/_save', title: "TITLE2", slug: "SLUG2", body: "BODY2",

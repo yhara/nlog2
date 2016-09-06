@@ -10,6 +10,7 @@ require 'redcarpet'
 
 class Post < ActiveRecord::Base
   validates_presence_of :body
+  validates_presence_of :datetime
   scope :visible, -> { where("visible = ?", true) }
 
   def path_to_show
