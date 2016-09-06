@@ -1,7 +1,7 @@
 .flash
   .error=@flash_error
 
-- unless @post.body.blank?
+- if params[:submit_by] == "Preview"
   .preview
     == slim :_post_full, locals: {post: @post}
 
