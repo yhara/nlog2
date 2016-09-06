@@ -26,8 +26,12 @@ class Post < ActiveRecord::Base
   end
   
   def local_date
+    local_datetime.to_date
+  end
+
+  def local_datetime
     zone = Time.find_zone!(NLog2.config[:timezone])
-    self.datetime.in_time_zone(zone).to_date
+    self.datetime.in_time_zone(zone)
   end
 
   def slug_or_id

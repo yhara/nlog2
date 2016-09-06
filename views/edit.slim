@@ -10,7 +10,7 @@ form action="/_save" method="POST"
     input type="hidden" name="id" value=(@post.id)
   div
     ' Date
-    input type="text" name="datetime" size=80 value=(@post.datetime.to_s)
+    input type="text" name="datetime" size=80 value=(@post.local_datetime.to_s)
   div
     ' Title
     input type="text" name="title" size=80 value=(@post.title)
