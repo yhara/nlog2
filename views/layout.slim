@@ -7,8 +7,10 @@ html
     script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"
 
   body
-    .menu
-      a href='/_edit' Edit
+    .header
+      .menu
+        .edit-button
+          a href='/_edit' Edit
 
     h1
       a href='/' =(NLog2.config[:blog][:title])

@@ -20,6 +20,10 @@ class Post < ActiveRecord::Base
       "/_draft/#{self.id}"
     end
   end
+
+  def path_to_edit
+    "/_edit/#{self.id}"
+  end
   
   def local_date
     zone = Time.find_zone!(NLog2.config[:timezone])
