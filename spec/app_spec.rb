@@ -68,20 +68,20 @@ describe 'NLog2' do
 
   describe '/_edit/' do
     it 'should show editor' do
-      post = Post.create!(title: "TITLE", slug: "SLUG", body: "BODY")
-      authorize 'jhon', 'passw0rd'
-      get "/_edit/#{post.id}"
-      expect(last_response).to be_ok
-      expect(last_response.body).to include("TITLE")
-    end
-  end
-
-  describe '/_edit/:id' do
-    it 'should show editor' do
       authorize 'jhon', 'passw0rd'
       get '/_edit/'
       expect(last_response).to be_ok
       expect(last_response.body).to include("form")
+    end
+  end
+
+  describe '/_edit/:id' do
+    it 'should show editor for the post' do
+      post = Post.create!(@valid_params)
+      authorize 'jhon', 'passw0rd'
+      get "/_edit/#{post.id}"
+      expect(last_response).to be_ok
+      expect(last_response.body).to include(@valid_params[:title])
     end
   end
 
