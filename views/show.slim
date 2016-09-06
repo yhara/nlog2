@@ -1,12 +1,1 @@
-- if @post.visible
-  h1 Show
-- else
-  h1 Show(Draft)
-
-h2= @post.title
-
-div
-  = @post.local_date
-
-div
-  == @post.rendered_body
+== slim :_post_full, locals: {post: @post}

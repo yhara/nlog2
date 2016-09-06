@@ -1,6 +1,10 @@
 .flash
   .error=@flash_error
 
+- unless @post.body.blank?
+  .preview
+    == slim :_post_full, locals: {post: @post}
+
 form action="/_save" method="POST"
   - if @post.id
     input type="hidden" name="id" value=(@post.id)

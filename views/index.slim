@@ -1,10 +1,6 @@
 - @posts.each do |post|
   .post
-    .post-date=(post.local_date)
-    .post-title
-      a href=(post.path_to_show) = (post.title)
-    .post-body
-      == post.rendered_body
+    == slim :_post_full, locals: {post: post}
   hr
 
 p
