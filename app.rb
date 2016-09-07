@@ -146,9 +146,9 @@ class NLog2 < Sinatra::Base
     @post.slug = params[:slug]
     @post.body = params[:body]
     @post.visible = (params[:visible] == "y")
-    begin
-      @post.datetime = Time.zone.parse(params[:datetime])
-    rescue ArgumentError
+    if (d = Time.zone.parse(params[:datetime]) rescue nil)
+      @post.datetime = d
+    else
       @flash_error = "Failed to parse date"
     end
 
