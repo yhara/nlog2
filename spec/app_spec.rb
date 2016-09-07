@@ -149,5 +149,13 @@ describe 'NLog2' do
       expect(last_response.header["Location"]).to(
         end_with("/1234/12/12/SLUG2"))
     end
+
+    it 'datetime should be parsed in configured timezone' do
+      authorize 'jhon', 'passw0rd'
+      post '/_save', @valid_params.merge(datetime: '1234-12-12',
+                                         submit_by: "Save")
+      new_post = Post.order("id desc").first
+      expect(new_post.datetime).to eq(Time.parse("1234-12-12 00:00:00 +10:00").utc)
+    end
   end
 end

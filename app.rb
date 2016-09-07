@@ -30,8 +30,7 @@ class Post < ActiveRecord::Base
   end
 
   def local_datetime
-    zone = Time.find_zone!(NLog2.config[:timezone])
-    self.datetime.in_time_zone(zone)
+    self.datetime.in_time_zone(Time.zone)
   end
 
   def slug_or_id
@@ -55,7 +54,10 @@ class NLog2 < Sinatra::Base
   class NotFound < StandardError; end
 
   def self.config; @@config or raise; end
-  def self.config=(c); @@config = c; end
+  def self.load_config(path)
+    @@config = YAML.load_file(path)
+    Time.zone = @@config[:timezone]
+  end
 
   register Sinatra::ActiveRecordExtension
   configure(:development){ register Sinatra::Reloader }
@@ -145,7 +147,7 @@ class NLog2 < Sinatra::Base
     @post.body = params[:body]
     @post.visible = (params[:visible] == "y")
     begin
-      @post.datetime = Time.parse(params[:datetime])
+      @post.datetime = Time.zone.parse(params[:datetime])
     rescue ArgumentError
       @flash_error = "Failed to parse date"
     end
@@ -160,4 +162,4 @@ class NLog2 < Sinatra::Base
   end
 end
 
-NLog2.config = YAML.load_file("#{__dir__}/config/nlog2.yml")
+NLog2.load_config("#{__dir__}/config/nlog2.yml")

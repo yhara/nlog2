@@ -5,7 +5,7 @@ require 'timecop'
 
 require_relative '../app.rb'
 
-NLog2.config = YAML.load_file("#{__dir__}/../config/nlog2.yml.example")
+NLog2.load_config("#{__dir__}/../config/nlog2.yml.example")
 
 RSpec.configure do |config|
   config.before(:suite) do
