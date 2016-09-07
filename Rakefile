@@ -40,6 +40,11 @@ namespace :config do
     raise "Password mismatch" unless pass1 == pass2
     puts Digest::SHA256.hexdigest(pass1 + salt)
   end
+  
+  desc "Show list of supported time zone name"
+  task :zones do
+    puts ActiveSupport::TimeZone::MAPPING.keys
+  end
 end
 
 task default: :test
