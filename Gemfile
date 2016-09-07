@@ -22,3 +22,10 @@ gem 'rspec'
 gem 'rack-test'
 gem 'database_rewinder'
 gem 'timecop'
+
+# Deploy
+gem 'capistrano', '>= 3'
+gem 'capistrano-bundler'
+gem 'capistrano-rbenv'
+gem 'capistrano-rails'
+gem 'capistrano-passenger'
