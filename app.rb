@@ -62,6 +62,13 @@ class NLog2 < Sinatra::Base
   register Sinatra::ActiveRecordExtension
   configure(:development){ register Sinatra::Reloader }
 
+  configure do
+    enable :logging
+    file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a+')
+    file.sync = true
+    use Rack::CommonLogger, file
+  end
+
   def authenticate!
     return if authorized?
     headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
