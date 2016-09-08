@@ -94,6 +94,13 @@ class NLog2 < Sinatra::Base
     halt 404, 'not found'
   end
 
+  error do
+    ex = env['sinatra.error']
+    logger.error("#{ex.class}: #{ex.message}")
+    Array(ex.backtrace).each(&logger.method(:error))
+    halt 500, 'internal server error'
+  end
+
   #
   # Show
   #
