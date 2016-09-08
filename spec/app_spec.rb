@@ -13,6 +13,7 @@ describe 'NLog2' do
       body: "BODY",
       datetime: Time.now.to_s,
     }
+    @valid_posted = @valid_params.merge(visible: true, published_at: Time.now)
   end
 
   before :each do
@@ -55,6 +56,15 @@ describe 'NLog2' do
         get '/1234/12/12/this-is-slug'
         expect(last_response).to be_not_found
       end
+    end
+  end
+
+  describe '/_feed.xml' do
+    it 'should return xml' do
+      Post.create!(@valid_posted)
+      get '/_feed.xml'
+      expect(last_response.body).to start_with("<?xml")
+      expect(last_response.body).to include(@valid_params[:body])
     end
   end
 

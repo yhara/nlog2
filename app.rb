@@ -11,7 +11,11 @@ require 'redcarpet'
 class Post < ActiveRecord::Base
   validates_presence_of :body
   validates_presence_of :datetime
-  scope :visible, -> { where("visible = ?", true) }
+  scope :visible, -> { where("visible = ?", true).order(datetime: :desc) }
+
+  def url
+    URI.join(NLog2.config[:blog][:url], path_to_show).to_s
+  end
 
   def path_to_show
     if self.published_at
@@ -122,6 +126,11 @@ class NLog2 < Sinatra::Base
 
   get '/screen.css' do
     sass :screen  # renders views/screen.sass as screen.css
+  end
+
+  get '/_feed.xml' do
+    @feed_posts = Post.visible.limit(10)
+    builder :_feed
   end
 
   #

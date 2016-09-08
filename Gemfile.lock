@@ -16,6 +16,7 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     arel (7.1.1)
     backports (3.6.8)
+    builder (3.2.2)
     capistrano (3.6.1)
       airbrussh (>= 1.0.0)
       capistrano-harrow
@@ -96,6 +97,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  builder
   capistrano (>= 3)
   capistrano-bundler
   capistrano-passenger

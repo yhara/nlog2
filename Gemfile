@@ -4,11 +4,12 @@ gem 'rake'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
-gem 'slim'
-gem 'sass'
 
 # View
+gem 'slim'
+gem 'sass'
 gem 'redcarpet'
+gem 'builder'
 
 # Database 
 gem 'sinatra-activerecord'

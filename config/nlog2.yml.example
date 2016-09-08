@@ -1,5 +1,8 @@
 :blog:
+  :url: "http://yhara.jp"
   :title: "My Blog"
+  :subtitle:
+  :author: "Jhon"
 
 :auth:
   :username: "jhon"
