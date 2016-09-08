@@ -8,7 +8,7 @@ gem 'slim'
 gem 'sass'
 
 # Config
-gem 'io-console'
+gem 'io-console', '0.4.5'
 
 # View
 gem 'redcarpet'
