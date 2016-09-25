@@ -62,6 +62,8 @@ class NLog2 < Sinatra::Base
     @@config = YAML.load_file(path)
     Time.zone = @@config[:timezone]
   end
+  def self.logger; @@logger or raise; end
+  def self.logger=(l); @@logger=l; end
 
   register Sinatra::ActiveRecordExtension
   configure(:development){ register Sinatra::Reloader }
@@ -70,7 +72,14 @@ class NLog2 < Sinatra::Base
     enable :logging
     file = File.new("#{settings.root}/log/#{settings.environment}.log", 'a+')
     file.sync = true
-    use Rack::CommonLogger, file
+    NLog2.logger = Logger.new(file)
+
+    use Rack::CommonLogger, NLog2.logger
+    ActiveRecord::Base.logger = NLog2.logger
+  end
+
+  before do
+    env["rack.logger"] = NLog2.logger
   end
 
   def authenticate!
