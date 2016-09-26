@@ -181,7 +181,8 @@ class NLog2 < Sinatra::Base
     if (d = Time.zone.parse(params[:datetime]) rescue nil)
       @post.datetime = d
     else
-      @flash_error = "Failed to parse date"
+      @flash_error = "Failed to parse date: #{params[:datetime].inspect}"
+      @post.datetime = Time.now
     end
 
     if params[:submit_by] == "Save" && !@flash_error
