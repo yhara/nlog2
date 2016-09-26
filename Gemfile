@@ -4,6 +4,7 @@ gem 'rake'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
+gem 'bcrypt'
 
 # View
 gem 'slim'

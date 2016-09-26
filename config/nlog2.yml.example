@@ -5,8 +5,9 @@
   :author: "Jhon"
 
 :auth:
+  # Basic auth username
   :username: "jhon"
-  :salt: "acb293063f0657d40f01e653d1b9a66d91c2bbf12b7cdd9e2e20d873d87d9732"
-  :password_hash: "47cd7570c39f6d69f6a2170c7a550091dc03e7f852a50ee5e873aa1356d4186a"
+  # Basic auth password (use `bundle exec rake config:hash_password`)
+  :password_hash: "$2a$10$AnoVlwt7WPzYVU071jEpmOWkEYhVFqiG3xFMySdfvJjwtMfwS0KRK"
 
 :timezone: 'Sydney'

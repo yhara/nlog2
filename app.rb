@@ -1,7 +1,7 @@
-require 'digest'
 require 'time'
 require 'sinatra/base'
 require 'sinatra/reloader'
+require 'bcrypt'
 require 'slim'
 require 'sass'
 require 'sinatra/activerecord'
@@ -94,11 +94,10 @@ class NLog2 < Sinatra::Base
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
     return false unless (@auth.provided? and @auth.basic? and @auth.credentials)
     username, password = *@auth.credentials
-    salt = NLog2.config[:auth][:salt] 
-    hashed = Digest::SHA256.hexdigest(password + salt)
+    correct_pass = BCrypt::Password.new(NLog2.config[:auth][:password_hash])
 
     return (username == NLog2.config[:auth][:username]) &&
-           (hashed == NLog2.config[:auth][:password_hash])
+           correct_pass.is_password?(password)
   end
 
   error ActiveRecord::RecordNotFound do

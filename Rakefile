@@ -1,7 +1,7 @@
 require "sinatra/activerecord/rake"
 require 'irb'
 require 'securerandom'
-require 'digest'
+require 'bcrypt'
 require 'io/console'
 
 $config = YAML.load_file("config/nlog2.yml")
@@ -25,20 +25,16 @@ task :test do
 end
 
 namespace :config do
-  desc "Generate config[:auth][:salt]"
-  task :generate_salt do
-    puts SecureRandom.hex(32)
-  end
-
   desc "Generate config[:auth][:password_hash]"
   task :hash_password do
-    salt = $config[:auth][:salt] || "Set salt first"
     puts "Type password"
     pass1 = $stdin.noecho(&:gets).chomp
     puts "Type password again"
     pass2 = $stdin.noecho(&:gets).chomp
     raise "Password mismatch" unless pass1 == pass2
-    puts Digest::SHA256.hexdigest(pass1 + salt)
+
+    puts "Add this to config[:auth][:password_hash]"
+    puts BCrypt::Password.create(pass1)
   end
   
   desc "Show list of supported time zone name"
