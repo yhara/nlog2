@@ -166,7 +166,7 @@ class NLog2 < Sinatra::Base
     slim :edit
   end
 
-  post '/_save' do
+  post '/_edit' do
     authenticate!
     @flash_error = nil
     if (id = params[:id])

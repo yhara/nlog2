@@ -95,27 +95,27 @@ describe 'NLog2' do
     end
   end
 
-  describe '/_save (Preview)' do
+  describe '/_edit (Preview)' do
     it 'should not create a record' do
       count = Post.count
 
       authorize 'jhon', 'passw0rd'
-      post '/_save', @valid_params.merge(submit_by: "Preview")
+      post '/_edit', @valid_params.merge(submit_by: "Preview")
 
       expect(Post.count).to eq(count)
     end
 
     it 'should not raise error when failed to parse datetime' do
       authorize 'jhon', 'passw0rd'
-      post '/_save', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
+      post '/_edit', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
     end
   end
 
-  describe '/_save (Save)' do
+  describe '/_edit (Save)' do
     it 'creates a draft post' do
       count = Post.count
       authorize 'jhon', 'passw0rd'
-      post '/_save', @valid_params.merge(submit_by: "Save")
+      post '/_edit', @valid_params.merge(submit_by: "Save")
       expect(Post.count).to eq(count+1)
       expect(last_response).to be_redirect
 
@@ -133,7 +133,7 @@ describe 'NLog2' do
       count = Post.count
       Timecop.freeze(@now) do
         authorize 'jhon', 'passw0rd'
-        post '/_save', @valid_params.merge(visible: "y", submit_by: "Save")
+        post '/_edit', @valid_params.merge(visible: "y", submit_by: "Save")
       end
       expect(Post.count).to eq(count+1)
       expect(last_response).to be_redirect
@@ -152,7 +152,7 @@ describe 'NLog2' do
       existing = Post.create!(@valid_params)
 
       authorize 'jhon', 'passw0rd'
-      post '/_save', title: "TITLE2", slug: "SLUG2", body: "BODY2",
+      post '/_edit', title: "TITLE2", slug: "SLUG2", body: "BODY2",
                      datetime: "1234-12-12 12:12:12",
                      visible: "y", id: existing.id, submit_by: "Save"
 
@@ -167,7 +167,7 @@ describe 'NLog2' do
 
     it 'datetime should be parsed in configured timezone' do
       authorize 'jhon', 'passw0rd'
-      post '/_save', @valid_params.merge(datetime: '1234-12-12',
+      post '/_edit', @valid_params.merge(datetime: '1234-12-12',
                                          submit_by: "Save")
       new_post = Post.order("id desc").first
       expect(new_post.datetime).to eq(Time.parse("1234-12-12 00:00:00 +10:00").utc)
@@ -177,7 +177,7 @@ describe 'NLog2' do
       count = Post.count
 
       authorize 'jhon', 'passw0rd'
-      post '/_save', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
+      post '/_edit', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
 
       expect(Post.count).to eq(count)
     end
