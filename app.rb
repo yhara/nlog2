@@ -60,7 +60,6 @@ class NLog2 < Sinatra::Base
   def self.config; @@config or raise; end
   def self.load_config(path)
     @@config = YAML.load_file(path)
-    Time.zone = @@config[:timezone]
   end
   def self.logger; @@logger or raise; end
   def self.logger=(l); @@logger=l; end
@@ -80,6 +79,9 @@ class NLog2 < Sinatra::Base
 
   before do
     env["rack.logger"] = NLog2.logger
+
+    # Seems to be needed when running on Passenger
+    Time.zone = NLog2.config[:timezone]
   end
 
   def authenticate!
