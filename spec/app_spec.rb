@@ -104,6 +104,11 @@ describe 'NLog2' do
 
       expect(Post.count).to eq(count)
     end
+
+    it 'should not raise error when failed to parse datetime' do
+      authorize 'jhon', 'passw0rd'
+      post '/_save', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
+    end
   end
 
   describe '/_save (Save)' do
@@ -166,6 +171,15 @@ describe 'NLog2' do
                                          submit_by: "Save")
       new_post = Post.order("id desc").first
       expect(new_post.datetime).to eq(Time.parse("1234-12-12 00:00:00 +10:00").utc)
+    end
+
+    it 'should not raise error when failed to parse datetime' do
+      count = Post.count
+
+      authorize 'jhon', 'passw0rd'
+      post '/_save', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
+
+      expect(Post.count).to eq(count)
     end
   end
 end
