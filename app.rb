@@ -38,7 +38,8 @@ class Post < ActiveRecord::Base
   end
 
   def slug_or_id
-    self.slug or self.id
+    return slug if slug && !slug.empty?
+    return self.id.to_s
   end
 
   def rendered_body
