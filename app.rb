@@ -192,6 +192,9 @@ class NLog2 < Sinatra::Base
       @post.save!
       redirect @post.path_to_show
     else
+      # Opt-out XSS Protection for this response, because it may contain
+      # <script> tag (eg. embedding SpeakerDeck) which the user has written.
+      headers "X-XSS-Protection" => "0" 
       slim :edit
     end
   end
