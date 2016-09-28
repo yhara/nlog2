@@ -3,6 +3,8 @@
   :title: "My Blog"
   :subtitle:
   :author: "Jhon"
+  # (Optional) Google Analytics Tracking ID
+  :ga_tracking_id:
 
 :auth:
   # Basic auth username
