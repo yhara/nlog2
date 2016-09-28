@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rake'
+gem 'rake', group: :development
 
 gem 'sinatra'
 gem 'sinatra-contrib'
@@ -17,14 +17,18 @@ gem 'sinatra-activerecord'
 gem 'sqlite3'
 
 # Test
-gem 'rspec'
-gem 'rack-test'
-gem 'database_rewinder'
-gem 'timecop'
+group :test do
+  gem 'rspec'
+  gem 'rack-test'
+  gem 'database_rewinder'
+  gem 'timecop'
+end
 
 # Deploy
-gem 'capistrano', '>= 3'
-gem 'capistrano-bundler'
-gem 'capistrano-rbenv'
-gem 'capistrano-rails'
-gem 'capistrano-passenger'
+group :development do
+  gem 'capistrano', '>= 3'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rbenv'
+  gem 'capistrano-rails'
+  gem 'capistrano-passenger'
+end
