@@ -1,4 +1,4 @@
-# nlog2
+# NLog2
 
 nlog2 is a simple blog engine/cms for me, written in Ruby.
 
@@ -24,3 +24,11 @@ nlog2 is a simple blog engine/cms for me, written in Ruby.
 
 1. rake db:migrate RAILS_ENV=test
 1. bundle exec rspec
+
+## License
+
+MIT
+
+## Contact
+
+https://github.com/yhara/nlog2
