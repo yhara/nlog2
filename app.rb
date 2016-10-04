@@ -116,6 +116,11 @@ class NLog2 < Sinatra::Base
   # Show
   #
 
+  get '/' do
+    @posts = Post.order(datetime: :desc)
+    slim :index  # renders views/index.slim
+  end
+
   get %r{(\d\d\d\d)/(\d\d)/(\d\d)/(.+)} do
     *date, slug_or_id = *params[:captures]
     d = Date.new(*date.map(&:to_i))
@@ -135,11 +140,6 @@ class NLog2 < Sinatra::Base
     authenticate!
     @post = Post.unscoped.find_by!(id: params[:id], published: false)
     slim :show
-  end
-
-  get '/' do
-    @posts = Post.order(datetime: :desc)
-    slim :index  # renders views/index.slim
   end
 
   get '/screen.css' do
