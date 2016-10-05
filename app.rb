@@ -161,7 +161,7 @@ class NLog2 < Sinatra::Base
     end
 
     @post = cond.where(datetime: range, visible: true).first!
-
+    @title = @post.title
     slim :show
   end
 
@@ -193,6 +193,7 @@ class NLog2 < Sinatra::Base
       @post = Post.new
       @post.datetime = Time.now
     end
+    @title = "Edit"
     slim :edit
   end
 
@@ -224,6 +225,7 @@ class NLog2 < Sinatra::Base
       # Opt-out XSS Protection for this response, because it may contain
       # <script> tag (eg. embedding SpeakerDeck) which the user has written.
       headers "X-XSS-Protection" => "0" 
+      @title = "Edit"
       slim :edit
     end
   end

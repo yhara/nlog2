@@ -2,7 +2,7 @@ doctype html
 html
   head
     meta charset="utf-8"
-    title=(NLog2.config[:blog][:title])
+    title=((@title ? "#{@title} - " : "") + NLog2.config[:blog][:title])
     link rel="stylesheet" href="/screen.css" type="text/css"
     link rel="alternate" type="application/atom+xml" title="Atom" href="/_feed.xml"
 
