@@ -8,3 +8,10 @@ div
 div
   == post.rendered_body
 
+.social-buttons
+  .twitter
+    // see also: layout.slim
+    - text = "#{post.title} - #{NLog2.config[:blog][:title]}"
+    - href = "https://twitter.com/intent/tweet?text=#{Rack::Utils.escape text}&url=#{Rack::Utils.escape post.url}"
+    a.twitter-share-button href=(href)
+      | Tweet
