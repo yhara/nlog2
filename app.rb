@@ -17,6 +17,10 @@ class Post < ActiveRecord::Base
     URI.join(NLog2.config[:blog][:url], path_to_show).to_s
   end
 
+  def page_title
+    "#{self.title} - #{NLog2.config[:blog][:title]}"
+  end
+
   def path_to_show
     if self.published_at
       self.datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
@@ -55,14 +59,20 @@ class Post < ActiveRecord::Base
   end
 
   # Social buttons
+
+  def twitter_button
+    href = "https://twitter.com/intent/tweet" +
+           "?text=#{Rack::Utils.escape self.page_title}" +
+           "&url=#{Rack::Utils.escape self.url}"
+    "<a class='twitter-share-button' href=#{href}>Tweet</a>"
+  end
   
   def hatena_bookmark_button
     b_url = "http://b.hatena.ne.jp/entry/" + self.url.sub(%r{\Ahttps?://}, "")
-    page_title = "#{self.title} - #{NLog2.config[:blog][:title]}"
     [
       "<a href='#{b_url}'",
         "class='hatena-bookmark-button'",
-        "data-hatena-bookmark-title='#{Rack::Utils.escape_html page_title}'",
+        "data-hatena-bookmark-title='#{Rack::Utils.escape_html self.page_title}'",
         "data-hatena-bookmark-layout='standard-noballoon'",
         "data-hatena-bookmark-lang='ja'",
         "title='Add this entry to Hatena Bookmark'>",
