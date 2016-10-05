@@ -62,9 +62,25 @@ class Post < ActiveRecord::Base
 
   def twitter_button
     href = "https://twitter.com/intent/tweet" +
-           "?text=#{Rack::Utils.escape self.page_title}" +
-           "&url=#{Rack::Utils.escape self.url}"
-    "<a class='twitter-share-button' href=#{href}>Tweet</a>"
+           "?text=#{self.page_title}" +
+           "&url=#{self.url}"
+    "<a class='twitter-share-button' href=#{Rack::Utils.escape_html href}>Tweet</a>"
+  end
+
+  def facebook_button
+    [
+      "<div class='fb-share-button'",
+      "data-href='#{Rack::Utils.escape_html self.url}'",
+      "data-layout='button'",
+      "data-size='small'",
+      "data-mobile-iframe='true'>",
+        "<a class='fb-xfbml-parse-ignore'",
+        "target='_blank'",
+        "href='https://www.facebook.com/sharer/sharer.php?u=#{Rack::Utils.escape_html self.url}'>",
+          "Share",
+        "</a>",
+      "</div>"
+    ].join(" ")
   end
   
   def hatena_bookmark_button
