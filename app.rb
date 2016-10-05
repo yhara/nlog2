@@ -53,6 +53,25 @@ class Post < ActiveRecord::Base
     )
     markdown.render(self.body)
   end
+
+  # Social buttons
+  
+  def hatena_bookmark_button
+    b_url = "http://b.hatena.ne.jp/entry/" + self.url.sub(%r{\Ahttps?://}, "")
+    page_title = "#{self.title} - #{NLog2.config[:blog][:title]}"
+    [
+      "<a href='#{b_url}'",
+        "class='hatena-bookmark-button'",
+        "data-hatena-bookmark-title='#{Rack::Utils.escape_html page_title}'",
+        "data-hatena-bookmark-layout='standard-noballoon'",
+        "data-hatena-bookmark-lang='ja'",
+        "title='Add this entry to Hatena Bookmark'>",
+        "<img src='https://b.st-hatena.com/images/entry-button/button-only@2x.png'",
+        "alt='Add this entry to Hatena Bookmark'",
+        "width='20' height='20' style='border: none;'>",
+      "</a>"
+    ].join(" ")
+  end
 end
 
 class NLog2 < Sinatra::Base
