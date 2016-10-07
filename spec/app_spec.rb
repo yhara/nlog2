@@ -165,14 +165,6 @@ describe 'NLog2' do
         end_with("/1234/12/12/SLUG2"))
     end
 
-    it 'datetime should be parsed in configured timezone' do
-      authorize 'jhon', 'passw0rd'
-      post '/_edit', @valid_params.merge(datetime: '1234-12-12',
-                                         submit_by: "Save")
-      new_post = Post.order("id desc").first
-      expect(new_post.datetime).to eq(Time.parse("1234-12-12 00:00:00 +10:00").utc)
-    end
-
     it 'should not raise error when failed to parse datetime' do
       count = Post.count
 
@@ -180,6 +172,35 @@ describe 'NLog2' do
       post '/_edit', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
 
       expect(Post.count).to eq(count)
+    end
+  end
+
+  context 'when timezone is set' do
+    describe 'Post' do
+      it 'should format post url in that timezone' do
+        post = Post.create!(@valid_posted.merge(
+          datetime: '2016-10-07 23:00:00 UTC', slug: 'tz-post'))
+        expect(post.path_to_show).to eq('/2016/10/08/tz-post')
+      end
+    end
+
+    describe 'post url' do
+      it 'should have a date in that timezone' do
+        post = Post.create!(@valid_posted.merge(
+          datetime: '2016-10-07 23:00:00 UTC', slug: 'tz-test'))
+        get '/2016/10/08/tz-test'
+        expect(last_response.body).to include("BODY")
+      end
+    end
+
+    describe 'editor' do
+      it 'should parse datetime in that timezone' do
+        authorize 'jhon', 'passw0rd'
+        post '/_edit', @valid_params.merge(datetime: '1234-12-12 00:00:00',
+                                           submit_by: "Save")
+        new_post = Post.order("id desc").first
+        expect(new_post.datetime).to eq(Time.parse("1234-12-12 00:00:00 +1000").utc)
+      end
     end
   end
 end
