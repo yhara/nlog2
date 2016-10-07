@@ -23,7 +23,7 @@ class Post < ActiveRecord::Base
 
   def path_to_show
     if self.published_at
-      self.datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
+      self.local_datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
     else
       "/_draft/#{self.id}"
     end
@@ -38,7 +38,7 @@ class Post < ActiveRecord::Base
   end
 
   def local_datetime
-    self.datetime.in_time_zone(Time.zone)
+    self.datetime.in_time_zone
   end
 
   def slug_or_id
@@ -169,7 +169,7 @@ class NLog2 < Sinatra::Base
   get %r{(\d\d\d\d)/(\d\d)/(\d\d)/(.+)} do
     *date, slug_or_id = *params[:captures]
     d = Date.new(*date.map(&:to_i))
-    range = d.to_time(:utc)...(d+1).to_time(:utc)
+    range = d.in_time_zone...(d+1).in_time_zone
 
     cond = Post.where(slug: slug_or_id)
     if (id = Integer(slug_or_id) rescue nil)
