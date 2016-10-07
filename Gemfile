@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rake', group: :development
+gem 'rake'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
