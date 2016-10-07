@@ -11,7 +11,7 @@ require 'redcarpet'
 class Post < ActiveRecord::Base
   validates_presence_of :body
   validates_presence_of :datetime
-  scope :visible, -> { where("visible = ?", true).order(datetime: :desc) }
+  validates_presence_of :published_at
 
   def url
     URI.join(NLog2.config[:blog][:url], path_to_show).to_s
@@ -22,11 +22,7 @@ class Post < ActiveRecord::Base
   end
 
   def path_to_show
-    if self.published_at
-      self.local_datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
-    else
-      "/_draft/#{self.id}"
-    end
+    self.local_datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
   end
 
   def path_to_edit
@@ -176,14 +172,8 @@ class NLog2 < Sinatra::Base
       cond = cond.or(Post.where(id: id))
     end
 
-    @post = cond.where(datetime: range, visible: true).first!
+    @post = cond.where(datetime: range).first!
     @title = @post.title
-    slim :show
-  end
-
-  get '/_draft/:id' do
-    authenticate!
-    @post = Post.unscoped.find_by!(id: params[:id], published: false)
     slim :show
   end
 
@@ -192,7 +182,7 @@ class NLog2 < Sinatra::Base
   end
 
   get '/_feed.xml' do
-    @feed_posts = Post.visible.limit(10)
+    @feed_posts = Post.limit(10)
     builder :_feed
   end
 
@@ -225,7 +215,6 @@ class NLog2 < Sinatra::Base
     @post.title = params[:title]
     @post.slug = params[:slug]
     @post.body = params[:body]
-    @post.visible = (params[:visible] == "y")
     if (d = Time.zone.parse(params[:datetime]) rescue nil)
       @post.datetime = d
     else
@@ -234,7 +223,7 @@ class NLog2 < Sinatra::Base
     end
 
     if params[:submit_by] == "Save" && !@flash_error
-      @post.published_at ||= Time.now if @post.visible
+      @post.published_at ||= Time.now
       @post.save!
       redirect @post.path_to_show
     else

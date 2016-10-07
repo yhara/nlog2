@@ -21,8 +21,5 @@ form action="/_edit" method="POST"
     textarea name="body" rows=20 cols=100
       = @post.body
   div
-    input type="checkbox" name="visible" value="y" checked=(@post.visible)
-    ' Publish
-  div
     input type="submit" name="submit_by" value="Preview"
     input type="submit" name="submit_by" value="Save"

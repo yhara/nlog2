@@ -13,7 +13,7 @@ describe 'NLog2' do
       body: "BODY",
       datetime: Time.now.to_s,
     }
-    @valid_posted = @valid_params.merge(visible: true, published_at: Time.now)
+    @valid_posted = @valid_params.merge(published_at: Time.now)
   end
 
   before :each do
@@ -22,40 +22,24 @@ describe 'NLog2' do
   end
 
   describe '/yyyy/dd/mm/xx' do
-    context 'when post is visible' do
-      it 'should show post matching slug' do
-        Post.create!(@valid_params.merge(
-          slug: "this-is-slug",
-          body: "this is body",
-          datetime: Time.utc(1234, 12, 12),
-          visible: true
-        ))
-        get '/1234/12/12/this-is-slug'
-        expect(last_response.body).to include("this is body")
-      end
-
-      it 'should show post matching id' do
-        post = Post.create!(@valid_params.merge(
-          slug: nil,
-          datetime: Time.utc(1234, 12, 12),
-          body: "this is body",
-          visible: true
-        ))
-        get "/1234/12/12/#{post.id}"
-        expect(last_response.body).to include("this is body")
-      end
+    it 'should show post matching slug' do
+      Post.create!(@valid_posted.merge(
+        slug: "this-is-slug",
+        body: "this is body",
+        datetime: Time.utc(1234, 12, 12),
+      ))
+      get '/1234/12/12/this-is-slug'
+      expect(last_response.body).to include("this is body")
     end
 
-    context 'when post is invisible' do
-      it 'should not show post matching slug' do
-        Post.create!(@valid_params.merge(
-          slug: "this-is-slug",
-          datetime: Time.utc(1234, 12, 12),
-          visible: false
-        ))
-        get '/1234/12/12/this-is-slug'
-        expect(last_response).to be_not_found
-      end
+    it 'should show post matching id' do
+      post = Post.create!(@valid_posted.merge(
+        slug: nil,
+        datetime: Time.utc(1234, 12, 12),
+        body: "this is body",
+      ))
+      get "/1234/12/12/#{post.id}"
+      expect(last_response.body).to include("this is body")
     end
   end
 
@@ -87,11 +71,11 @@ describe 'NLog2' do
 
   describe '/_edit/:id' do
     it 'should show editor for the post' do
-      post = Post.create!(@valid_params)
+      post = Post.create!(@valid_posted)
       authorize 'jhon', 'passw0rd'
       get "/_edit/#{post.id}"
       expect(last_response).to be_ok
-      expect(last_response.body).to include(@valid_params[:title])
+      expect(last_response.body).to include(@valid_posted[:title])
     end
   end
 
@@ -112,28 +96,11 @@ describe 'NLog2' do
   end
 
   describe '/_edit (Save)' do
-    it 'creates a draft post' do
-      count = Post.count
-      authorize 'jhon', 'passw0rd'
-      post '/_edit', @valid_params.merge(submit_by: "Save")
-      expect(Post.count).to eq(count+1)
-      expect(last_response).to be_redirect
-
-      new_post = Post.order("id desc").first
-      expect(new_post.title).to eq("TITLE")
-      expect(new_post.slug).to eq("SLUG")
-      expect(new_post.body).to eq("BODY")
-      expect(new_post.visible).to eq(false)
-      expect(new_post.published_at).to be_nil
-      expect(last_response.header["Location"]).to(
-        end_with("/_draft/#{new_post.id}"))
-    end
-
     it 'creates a public post' do
       count = Post.count
       Timecop.freeze(@now) do
         authorize 'jhon', 'passw0rd'
-        post '/_edit', @valid_params.merge(visible: "y", submit_by: "Save")
+        post '/_edit', @valid_params.merge(submit_by: "Save")
       end
       expect(Post.count).to eq(count+1)
       expect(last_response).to be_redirect
@@ -142,25 +109,23 @@ describe 'NLog2' do
       expect(new_post.title).to eq("TITLE")
       expect(new_post.slug).to eq("SLUG")
       expect(new_post.body).to eq("BODY")
-      expect(new_post.visible).to eq(true)
       expect(new_post.published_at).to eq(@now)
       expect(last_response.header["Location"]).to(
-        end_with(@now.strftime("/%Y/%m/%d/SLUG")))
+        end_with(@now.in_time_zone.strftime("/%Y/%m/%d/SLUG")))
     end
 
     it 'updates a post' do
-      existing = Post.create!(@valid_params)
+      existing = Post.create!(@valid_posted)
 
       authorize 'jhon', 'passw0rd'
       post '/_edit', title: "TITLE2", slug: "SLUG2", body: "BODY2",
                      datetime: "1234-12-12 12:12:12",
-                     visible: "y", id: existing.id, submit_by: "Save"
+                     id: existing.id, submit_by: "Save"
 
       updated = Post.find_by!(id: existing.id)
       expect(updated.title).to eq("TITLE2")
       expect(updated.slug).to eq("SLUG2")
       expect(updated.body).to eq("BODY2")
-      expect(updated.visible).to eq(true)
       expect(last_response.header["Location"]).to(
         end_with("/1234/12/12/SLUG2"))
     end
