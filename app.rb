@@ -62,8 +62,8 @@ class Post < ActiveRecord::Base
 
   def twitter_button
     href = "https://twitter.com/intent/tweet" +
-           "?text=#{self.page_title}" +
-           "&url=#{self.url}"
+           "?text=#{Rack::Utils.escape self.page_title}" +
+           "&url=#{Rack::Utils.escape self.url}"
     "<a class='twitter-share-button' href=#{Rack::Utils.escape_html href}>Tweet</a>"
   end
 
