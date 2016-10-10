@@ -1,19 +1,20 @@
-h1
-  a href=post.path_to_show
-    = post.title
+.post
+  h1
+    a href=post.path_to_show
+      = post.title
 
-div
-  = post.local_date
+  div
+    = post.local_date
 
-div
-  == post.rendered_body
+  div
+    == post.rendered_body
 
-.social-buttons
-  .twitter
-    == post.twitter_button
-  '
-  .facebook
-    == post.facebook_button
-  '
-  .hatebu
-    == post.hatena_bookmark_button
+  .social-buttons
+    .twitter
+      == post.twitter_button
+    '
+    .facebook
+      == post.facebook_button
+    '
+    .hatebu
+      == post.hatena_bookmark_button
