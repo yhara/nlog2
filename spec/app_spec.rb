@@ -21,6 +21,14 @@ describe 'NLog2' do
     @now = Time.now.utc
   end
 
+  describe '/' do
+    it 'should show recent posts' do
+      Post.create!(@valid_posted)
+      get '/'
+      expect(last_response.body).to include("BODY")
+    end
+  end
+
   describe '/yyyy/dd/mm/xx' do
     it 'should show post matching slug' do
       Post.create!(@valid_posted.merge(
