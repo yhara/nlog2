@@ -2,8 +2,8 @@ source 'http://rubygems.org'
 
 gem 'rake'
 
-gem 'sinatra'
-gem 'sinatra-contrib'
+gem 'sinatra', '2.0.0.beta2'
+gem 'sinatra-contrib', '2.0.0.beta2'
 gem 'bcrypt'
 
 # View
@@ -11,9 +11,10 @@ gem 'slim'
 gem 'sass'
 gem 'redcarpet'
 gem 'builder'
+#gem 'actionpack', '5.0.0.1'
 
 # Database 
-gem 'sinatra-activerecord'
+gem 'sinatra-activerecord', git: 'https://github.com/yhara/sinatra-activerecord', branch: 'sinatra2'
 gem 'sqlite3'
 
 # Test
