@@ -22,18 +22,18 @@ class Post < ActiveRecord::Base
   end
 
   def path_to_show
-    self.local_datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
+    self.author_datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
   end
 
   def path_to_edit
     "/_edit/#{self.id}"
   end
   
-  def local_date
-    local_datetime.to_date
+  def author_date
+    author_datetime.to_date
   end
 
-  def local_datetime
+  def author_datetime
     self.datetime.in_time_zone
   end
 
