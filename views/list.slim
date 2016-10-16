@@ -1,0 +1,6 @@
+ul
+  - @posts.each do |post|
+    li
+      span = post.local_date
+      '
+      a href=(post.path_to_show) = post.title

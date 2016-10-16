@@ -53,11 +53,13 @@ html
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
 
-    .header
+    header
       .menu
         .edit-button
           a href='/_edit' Edit
+      h1
+        a href='/' =(NLog2.config[:blog][:title])
 
-    h1
-      a href='/' =(NLog2.config[:blog][:title])
+      a href='/_list' Recent Posts
+
     == yield

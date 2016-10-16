@@ -159,7 +159,12 @@ class NLog2 < Sinatra::Base
 
   get '/' do
     @posts = Post.order(datetime: :desc)
-    slim :index  # renders views/index.slim
+    slim :index
+  end
+
+  get '/_list' do
+    @posts = Post.order(datetime: :desc)
+    slim :list
   end
 
   get %r{(\d\d\d\d)/(\d\d)/(\d\d)/(.+)} do

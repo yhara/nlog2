@@ -29,6 +29,14 @@ describe 'NLog2' do
     end
   end
 
+  describe '/_list' do
+    it 'should show the list of recent posts' do
+      Post.create!(@valid_posted)
+      get '/'
+      expect(last_response.body).to include("TITLE")
+    end
+  end
+
   describe '/yyyy/dd/mm/xx' do
     it 'should show post matching slug' do
       Post.create!(@valid_posted.merge(
