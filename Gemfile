@@ -11,7 +11,7 @@ gem 'slim'
 gem 'sass'
 gem 'redcarpet'
 gem 'builder'
-#gem 'actionpack', '5.0.0.1'
+gem 'kaminari'
 
 # Database 
 gem 'sinatra-activerecord', git: 'https://github.com/yhara/sinatra-activerecord', branch: 'sinatra2'

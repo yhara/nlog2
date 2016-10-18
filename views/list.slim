@@ -4,3 +4,12 @@ ul
       span = post.author_date
       '
       a href=(post.path_to_show) = post.title
+
+div
+  - unless @posts.first_page? 
+    a href=(previous_page_path(@posts))
+      | &laquo; Prev
+  '
+  - unless @posts.last_page?
+    a href=(next_page_path(@posts))
+      | Next &raquo;

@@ -7,6 +7,8 @@ require 'sass'
 require 'sinatra/activerecord'
 require 'active_support/core_ext/date'
 require 'redcarpet'
+require 'kaminari'; Kaminari::Hooks.init
+require 'active_support/core_ext/object/to_query'
 
 class Post < ActiveRecord::Base
   validates_presence_of :body
@@ -154,6 +156,24 @@ class NLog2 < Sinatra::Base
   end
 
   #
+  # View Helpers
+  #
+
+  helpers do
+    def previous_page_path(scope, params={})
+      return nil if scope.first_page?
+      query = params.merge(page: scope.prev_page)
+      return env['PATH_INFO'] + (query.empty? ? '' : "?#{query.to_query}")
+    end
+
+    def next_page_path(scope, params={})
+      return nil if scope.last_page?
+      query = params.merge(page: scope.next_page)
+      return env['PATH_INFO'] + (query.empty? ? '' : "?#{query.to_query}")
+    end
+  end
+
+  #
   # Show
   #
 
@@ -163,7 +183,7 @@ class NLog2 < Sinatra::Base
   end
 
   get '/_list' do
-    @posts = Post.order(datetime: :desc)
+    @posts = Post.order(datetime: :desc).page(params[:page]).per(100)
     slim :list
   end
 
