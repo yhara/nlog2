@@ -178,7 +178,7 @@ class NLog2 < Sinatra::Base
   #
 
   get '/' do
-    @posts = Post.order(datetime: :desc)
+    @posts = Post.order(datetime: :desc).page(params[:page]).per(10)
     slim :index
   end
 
