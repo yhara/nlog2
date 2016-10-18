@@ -7,7 +7,7 @@ require 'sass'
 require 'sinatra/activerecord'
 require 'active_support/core_ext/date'
 require 'redcarpet'
-require 'kaminari'; Kaminari::Hooks.init
+require 'kaminari/sinatra'
 require 'active_support/core_ext/object/to_query'
 
 class Post < ActiveRecord::Base

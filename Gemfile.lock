@@ -66,6 +66,11 @@ GEM
     kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    kaminari-sinatra (0.1.0)
+      actionview
+      kaminari
+      padrino-helpers
+      sinatra
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mini_portile2 (2.1.0)
@@ -77,6 +82,12 @@ GEM
     net-ssh (3.2.0)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
+    padrino-helpers (0.13.3.2)
+      i18n (~> 0.6, >= 0.6.7)
+      padrino-support (= 0.13.3.2)
+      tilt (>= 1.4.1, < 3)
+    padrino-support (0.13.3.2)
+      activesupport (>= 3.1)
     rack (2.0.1)
     rack-protection (2.0.0.beta2)
       rack
@@ -142,7 +153,7 @@ DEPENDENCIES
   capistrano-rails
   capistrano-rbenv
   database_rewinder
-  kaminari
+  kaminari-sinatra
   rack-test
   rake
   redcarpet
