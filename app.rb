@@ -207,7 +207,7 @@ class NLog2 < Sinatra::Base
   end
 
   get '/_feed.xml' do
-    @feed_posts = Post.limit(10)
+    @feed_posts = Post.order(datetime: :desc).limit(10)
     builder :_feed
   end
 
