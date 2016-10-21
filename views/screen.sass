@@ -2,9 +2,23 @@
   body
     margin-left: 20%
     margin-right: 20%
+  h1
+    font-size: 3.2rem
+  h2
+    font-size: 2.4rem
+@media (max-width: 1023px)
+  h1
+    font-size: 2.4rem
+  h2
+    font-size: 2.0rem
 
+html
+  font-size: 62.5%
 body
   font-family: Helvetica, Arial, Tahoma, sans-serif
+  font-size: 1.6rem
+code
+  font-family: Monaco, monospace
 
 .edit-button
   float: right
@@ -32,7 +46,9 @@ body
       clear: both
 
   pre
+    width: 100%
     background: #f9f9f9
-  code
-    font-size: 80%
-    font-family: Monaco, monospace
+    overflow: auto
+    word-break: break-all
+    word-wrap: break-word
+    white-space: pre-wrap
