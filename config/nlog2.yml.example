@@ -8,8 +8,9 @@
 
 # Advertizements (Optional)
 :ads:
-#  :adsense_client: ca-pub-0000000
-#  :adsense_slot: 0000000
+#  :adsense_client: "ca-pub-0000000"
+#  :adsense_slot: "0000000"
+#  :amazon_ad_tag: "asdffdsa-22"
 
 :auth:
   # Basic auth username

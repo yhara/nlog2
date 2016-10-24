@@ -12,3 +12,10 @@
       <script>
       (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
+
+- t = NLog2.config[:ads][:amazon_ad_tag]
+- if t
+  br
+  | <script type="text/javascript"><!--
+    amazon_ad_tag = "#{t}"; amazon_ad_width = "300"; amazon_ad_height = "250"; amazon_ad_logo = "hide";//--></script>
+    <script type="text/javascript" src="http://ir-jp.amazon-adsystem.com/s/ads.js"></script>
