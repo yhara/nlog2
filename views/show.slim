@@ -1,1 +1,14 @@
 == slim :_post_full, locals: {post: @post}
+
+- c = NLog2.config[:ads][:adsense_client]
+- s = NLog2.config[:ads][:adsense_slot]
+- if c && s
+    | <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="#{c}"
+           data-ad-slot="#{s}"
+           data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>

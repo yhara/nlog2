@@ -6,6 +6,11 @@
   # (Optional) Google Analytics Tracking ID
   :ga_tracking_id:
 
+# Advertizements (Optional)
+:ads:
+#  :adsense_client: ca-pub-0000000
+#  :adsense_slot: 0000000
+
 :auth:
   # Basic auth username
   :username: "jhon"
