@@ -6,8 +6,9 @@
     a href=post.path_to_show
       = post.title
 
-  div
-    = post.author_date
+  - unless post.permanent?
+    div
+      = post.author_date
 
   div
     == post.rendered_body

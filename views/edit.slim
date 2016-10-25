@@ -9,13 +9,16 @@ form action="/_edit" method="POST"
   - if @post.id
     input type="hidden" name="id" value=(@post.id)
   div
+    ' Permanent?
+    input type="checkbox" name="permanent" value="yes" checked=(@post.permanent?)
+  div
     ' Date
     input type="text" name="datetime" size=80 value=(@post.author_datetime.to_s)
   div
     ' Title
     input type="text" name="title" size=80 value=(@post.title)
   div
-    ' Slug(optional)
+    ' Slug
     input type="text" name="slug" size=40 value=(@post.slug)
   div
     textarea name="body" rows=20 cols=100

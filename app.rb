@@ -17,6 +17,10 @@ class Post < ActiveRecord::Base
   validates_presence_of :datetime
   validates_presence_of :published_at
 
+  def permanent?
+    permanent
+  end
+
   def url
     URI.join(NLog2.config[:blog][:url], path_to_show).to_s
   end
@@ -183,12 +187,14 @@ class NLog2 < Sinatra::Base
   #
 
   get '/' do
-    @posts = Post.order(datetime: :desc).page(params[:page]).per(10)
+    @posts = Post.where(permanent: false)
+                 .order(datetime: :desc).page(params[:page]).per(10)
     slim :index
   end
 
   get '/_list' do
-    @posts = Post.order(datetime: :desc).page(params[:page]).per(100)
+    @posts = Post.where(permanent: false)
+                 .order(datetime: :desc).page(params[:page]).per(100)
     slim :list
   end
 
@@ -197,12 +203,12 @@ class NLog2 < Sinatra::Base
     d = Date.new(*date.map(&:to_i))
     range = d.in_time_zone...(d+1).in_time_zone
 
-    cond = Post.where(slug: slug_or_id)
+    cond = Post.where(permanent: false, slug: slug_or_id)
     if (id = Integer(slug_or_id) rescue nil)
       cond = cond.or(Post.where(id: id))
     end
 
-    @post = cond.where(datetime: range).first!
+    @post = cond.where(datetime: range).first or raise Sinatra::NotFound
     @title = @post.title
     slim :show
   end
@@ -217,7 +223,8 @@ class NLog2 < Sinatra::Base
   end
 
   get '/_feed.xml' do
-    @feed_posts = Post.order(datetime: :desc).limit(10)
+    @feed_posts = Post.where(permanent: false)
+                      .order(datetime: :desc).limit(10)
     builder :_feed
   end
 
@@ -229,7 +236,7 @@ class NLog2 < Sinatra::Base
   get '/_edit/:id?' do
     authenticate!
     if (id = params[:id])
-      @post = Post.find_by!(id: id)
+      @post = Post.find_by(id: id) or raise Sinatra::NotFound
     else
       @post = Post.new
       @post.datetime = Time.now
@@ -242,11 +249,12 @@ class NLog2 < Sinatra::Base
     authenticate!
     @flash_error = nil
     if (id = params[:id])
-      @post = Post.find_by!(id: id)
+      @post = Post.find_by(id: id) or raise Sinatra::NotFound
     else
       @post = Post.new
     end
 
+    @post.permanent = params[:permanent]
     @post.title = params[:title]
     @post.slug = params[:slug]
     @post.body = params[:body]
@@ -268,6 +276,16 @@ class NLog2 < Sinatra::Base
       @title = "Edit"
       slim :edit
     end
+  end
+
+  #
+  # Permanent articles
+  #
+  get %r{/(\w+)} do |name|
+    @post = Post.where(permanent: true, slug: name).first
+    raise Sinatra::NotFound unless @post
+    @title = @post.title
+    slim :show
   end
 end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161007152408) do
+ActiveRecord::Schema.define(version: 20161025123631) do
 
   create_table "posts", force: :cascade do |t|
     t.string   "title"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20161007152408) do
     t.datetime "published_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "permanent",    default: false, null: false
   end
 
 end
