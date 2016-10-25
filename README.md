@@ -23,14 +23,14 @@ I'd like to keep the code simple enough to do that.)
   1. `bundle exec rake config:hash_password`
 1. Setup
   1. `bundle install`
-  1. `bundle exec rake db:migrate RAILS_ENV=production`
+  1. `bundle exec rake db:migrate RACK_ENV=production`
 1. Run
   1. `bundle exec rackup -e production`
   1. `open http://localhost:9292/_edit`
 
 ## Run test
 
-1. rake db:migrate RAILS_ENV=test
+1. rake db:migrate RACK_ENV=test
 1. bundle exec rspec
 
 ## License
