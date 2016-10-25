@@ -18,9 +18,10 @@ html
   font-size: 62.5%
 body
   font-family: Helvetica, Arial, Tahoma, sans-serif
-  font-size: 1.6rem
+  font-size: 16px  // We cannot use `rem` here due to chrome rem bug
 code
   font-family: Monaco, monospace
+  font-size: 1.4rem
 
 .edit-button
   float: right
@@ -50,6 +51,7 @@ code
   pre
     width: 100%
     background: #f9f9f9
+    line-height: 1.35
     overflow: auto
     word-break: break-all
     word-wrap: break-word
