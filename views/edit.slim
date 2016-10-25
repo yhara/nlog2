@@ -10,7 +10,7 @@ form action="/_edit" method="POST"
     input type="hidden" name="id" value=(@post.id)
   div
     ' Permanent?
-    input type="checkbox" name="permanent" value="yes" checked=(@post.permanent?)
+    input type="checkbox" name="permanent" value="yes" checked=(@post.permanent? ? "checked" : nil)
   div
     ' Date
     input type="text" name="datetime" size=80 value=(@post.author_datetime.to_s)

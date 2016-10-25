@@ -147,6 +147,14 @@ describe 'NLog2' do
         end_with("/1234/12/12/SLUG2"))
     end
 
+    it 'should redirect to url without date when post is permanent' do
+      authorize 'jhon', 'passw0rd'
+      post '/_edit', @valid_params.merge(permanent: "yes", submit_by: "Save")
+      url = last_response.header["Location"]
+      expect(url).not_to match(%r{/\d\d\d\d/\d\d/\d\d})
+      expect(url).to end_with("SLUG")
+    end
+
     it 'should not raise error when failed to parse datetime' do
       count = Post.count
 

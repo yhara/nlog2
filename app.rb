@@ -30,7 +30,11 @@ class Post < ActiveRecord::Base
   end
 
   def path_to_show
-    self.author_datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
+    if permanent?
+      "/#{slug_or_id}"
+    else
+      self.author_datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
+    end
   end
 
   def path_to_edit
@@ -254,7 +258,7 @@ class NLog2 < Sinatra::Base
       @post = Post.new
     end
 
-    @post.permanent = !!params[:permanent]
+    @post.permanent = (params[:permanent] == "yes")
     @post.title = params[:title]
     @post.slug = params[:slug]
     @post.body = params[:body]
