@@ -8,6 +8,7 @@ describe 'NLog2' do
 
   before :all do
     @valid_params = {
+      permanent: false,
       title: "TITLE",
       slug: "SLUG",
       body: "BODY",
@@ -136,7 +137,7 @@ describe 'NLog2' do
       authorize 'jhon', 'passw0rd'
       post '/_edit', title: "TITLE2", slug: "SLUG2", body: "BODY2",
                      datetime: "1234-12-12 12:12:12",
-                     id: existing.id, submit_by: "Save"
+                     id: existing.id, permanent: false, submit_by: "Save"
 
       updated = Post.find_by!(id: existing.id)
       expect(updated.title).to eq("TITLE2")
@@ -153,6 +154,14 @@ describe 'NLog2' do
       post '/_edit', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
 
       expect(Post.count).to eq(count)
+    end
+  end
+
+  describe 'permanent pages' do
+    it 'should be accessible without date' do
+      Post.create!(@valid_posted.merge(permanent: true))
+      get "/SLUG"
+      expect(last_response.body).to include("BODY")
     end
   end
 

@@ -1,6 +1,14 @@
 # NLog2
 
-nlog2 is a simple blog engine/cms for me, written in Ruby.
+nlog2 is a simple blog engine/cms for me, written in Ruby and Sinatra.
+
+(Rather than using it as-is, it is preferred to fork this repo and
+customize it for you because some of the features may not make sense to you.
+I'd like to keep the code simple enough to do that.)
+
+## Features
+
+- Permanent pages (accessible without date, like http://yhara.jp/About)
 
 ## Requirements
 
