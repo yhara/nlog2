@@ -4,7 +4,7 @@ nlog2 is a simple blog engine/cms for me, written in Ruby.
 
 ## Requirements
 
-- Ruby (tested with 2.3)
+- Ruby >= 2.3
 
 ## Install
 

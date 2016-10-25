@@ -1,7 +1,7 @@
 == slim :_post_full, locals: {post: @post}
 
-- c = NLog2.config[:ads][:adsense_client]
-- s = NLog2.config[:ads][:adsense_slot]
+- c = NLog2.config.dig(:ads, :adsense_client)
+- s = NLog2.config.dig(:ads, :adsense_slot)
 - if c && s
     | <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
       <ins class="adsbygoogle"
@@ -13,7 +13,7 @@
       (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
 
-- t = NLog2.config[:ads][:amazon_ad_tag]
+- t = NLog2.config.dig(:ads, :amazon_ad_tag)
 - if t
   br
   | <script type="text/javascript"><!--
