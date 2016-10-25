@@ -12,6 +12,7 @@ gem 'sass'
 gem 'redcarpet'
 gem 'builder'
 gem 'kaminari-sinatra'
+gem 'rouge'
 
 # Database 
 gem 'sinatra-activerecord', git: 'https://github.com/yhara/sinatra-activerecord', branch: 'sinatra2'

@@ -7,6 +7,8 @@ require 'sass'
 require 'sinatra/activerecord'
 require 'active_support/core_ext/date'
 require 'redcarpet'
+require 'rouge'
+require 'rouge/plugins/redcarpet'
 require 'kaminari/sinatra'
 require 'active_support/core_ext/object/to_query'
 
@@ -44,8 +46,11 @@ class Post < ActiveRecord::Base
     return self.id.to_s
   end
 
+  class HtmlWithRouge < Redcarpet::Render::HTML
+    include Rouge::Plugins::Redcarpet
+  end
   def rendered_body
-    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML,
+    markdown = Redcarpet::Markdown.new(HtmlWithRouge,
       no_intra_emphasis: true,
       tables: true,
       fenced_code_blocks: true,
@@ -204,6 +209,11 @@ class NLog2 < Sinatra::Base
 
   get '/screen.css' do
     sass :screen  # renders views/screen.sass as screen.css
+  end
+
+  get '/highlight.css' do
+    headers 'Content-Type' => 'text/css'
+    Rouge::Themes::Github.render(scope: '.highlight')
   end
 
   get '/_feed.xml' do
