@@ -254,7 +254,7 @@ class NLog2 < Sinatra::Base
       @post = Post.new
     end
 
-    @post.permanent = params[:permanent]
+    @post.permanent = !!params[:permanent]
     @post.title = params[:title]
     @post.slug = params[:slug]
     @post.body = params[:body]
