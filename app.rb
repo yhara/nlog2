@@ -202,7 +202,7 @@ class NLog2 < Sinatra::Base
       cond = cond.or(Post.where(id: id))
     end
 
-    @post = cond.where(datetime: range).first!
+    @post = cond.where(datetime: range).first or raise Sinatra::NotFound
     @title = @post.title
     slim :show
   end
@@ -229,7 +229,7 @@ class NLog2 < Sinatra::Base
   get '/_edit/:id?' do
     authenticate!
     if (id = params[:id])
-      @post = Post.find_by!(id: id)
+      @post = Post.find_by(id: id) or raise Sinatra::NotFound
     else
       @post = Post.new
       @post.datetime = Time.now
@@ -242,7 +242,7 @@ class NLog2 < Sinatra::Base
     authenticate!
     @flash_error = nil
     if (id = params[:id])
-      @post = Post.find_by!(id: id)
+      @post = Post.find_by(id: id) or raise Sinatra::NotFound
     else
       @post = Post.new
     end
