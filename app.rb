@@ -13,9 +13,7 @@ require 'kaminari/sinatra'
 require 'active_support/core_ext/object/to_query'
 
 class Post < ActiveRecord::Base
-  validates_presence_of :body
-  validates_presence_of :datetime
-  validates_presence_of :published_at
+  validates_presence_of :body, :title, :datetime, :published_at
 
   scope :future, ->{ where('datetime > ?', Time.now) }
 
