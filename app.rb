@@ -17,6 +17,8 @@ class Post < ActiveRecord::Base
   validates_presence_of :datetime
   validates_presence_of :published_at
 
+  scope :future, ->{ where('datetime > ?', Time.now) }
+
   def permanent?
     permanent
   end

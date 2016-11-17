@@ -1,6 +1,16 @@
 .flash
   .error=@flash_error
 
+- if Post.future.any?
+  h2 Scheduled posts
+  .future-posts
+    ul
+      - Post.future.each do |post|
+        li 
+          a href=(post.path_to_edit)
+            = "#{post.title} (#{post.author_datetime})"
+
+
 - if params[:submit_by] == "Preview"
   .preview
     == slim :_post_full, locals: {post: @post}
