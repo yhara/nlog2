@@ -155,6 +155,14 @@ describe 'NLog2' do
       expect(url).to end_with("SLUG")
     end
 
+    context 'when saving future post' do
+      it 'should show edit page again' do
+        authorize 'jhon', 'passw0rd'
+        post '/_edit', @valid_params.merge(datetime: Time.now + 3600, submit_by: "Save")
+        expect(last_response).to be_ok  # Not redirect
+      end
+    end
+
     it 'should not raise error when failed to parse datetime' do
       count = Post.count
 

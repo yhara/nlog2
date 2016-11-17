@@ -21,6 +21,10 @@ class Post < ActiveRecord::Base
     permanent
   end
 
+  def future?
+    self.datetime > Time.now
+  end
+
   def url
     URI.join(NLog2.config[:blog][:url], path_to_show).to_s
   end
@@ -239,6 +243,7 @@ class NLog2 < Sinatra::Base
   get '/_edit' do redirect '/_edit/' end
   get '/_edit/:id?' do
     authenticate!
+    @flash = {}
     if (id = params[:id])
       @post = Post.find_by(id: id) or raise Sinatra::NotFound
     else
@@ -251,7 +256,7 @@ class NLog2 < Sinatra::Base
 
   post '/_edit' do
     authenticate!
-    @flash_error = nil
+    @flash = {}
     if (id = params[:id])
       @post = Post.find_by(id: id) or raise Sinatra::NotFound
     else
@@ -265,16 +270,22 @@ class NLog2 < Sinatra::Base
     if (d = Time.zone.parse(params[:datetime]) rescue nil)
       @post.datetime = d
     else
-      @flash_error = "Failed to parse date: #{params[:datetime].inspect}"
+      @flash[:error] = "Failed to parse date: #{params[:datetime].inspect}"
       @post.datetime = Time.now
     end
 
-    if params[:submit_by] == "Save" && !@flash_error
+    if params[:submit_by] == "Save" && !@flash[:error]
       @post.published_at ||= Time.now
       if @post.save
-        redirect @post.path_to_show
+        if @post.future?
+          @flash[:notice] = "Scheduled `#{@post.title}' to be posted at #{@post.author_datetime}"
+          @post = Post.new; @post.datetime = Time.now
+          slim :edit
+        else
+          redirect @post.path_to_show
+        end
       else
-        @flash_error = "Failed to save record: #{@post.errors.messages.inspect}"
+        @flash[:error] = "Failed to save record: #{@post.errors.messages.inspect}"
         slim :edit
       end
     else

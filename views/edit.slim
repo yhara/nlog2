@@ -1,5 +1,7 @@
-.flash
-  .error=@flash_error
+- if @flash[:notice]
+  .flash.notice = @flash[:notice]
+- if @flash[:error]
+  .flash.error = @flash[:error]
 
 - if Post.future.any?
   h2 Scheduled posts
