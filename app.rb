@@ -13,12 +13,17 @@ require 'kaminari/sinatra'
 require 'active_support/core_ext/object/to_query'
 
 class Post < ActiveRecord::Base
-  validates_presence_of :body
-  validates_presence_of :datetime
-  validates_presence_of :published_at
+  validates_presence_of :body, :title, :datetime, :published_at
+
+  scope :published, ->{ where('datetime <= ?', Time.now) }
+  scope :future, ->{ where('datetime > ?', Time.now) }
 
   def permanent?
     permanent
+  end
+
+  def future?
+    self.datetime > Time.now
   end
 
   def url
@@ -191,13 +196,15 @@ class NLog2 < Sinatra::Base
   #
 
   get '/' do
-    @posts = Post.where(permanent: false)
+    @posts = Post.published
+                 .where(permanent: false)
                  .order(datetime: :desc).page(params[:page]).per(10)
     slim :index
   end
 
   get '/_list' do
-    @posts = Post.where(permanent: false)
+    @posts = Post.published
+                 .where(permanent: false)
                  .order(datetime: :desc).page(params[:page]).per(100)
     slim :list
   end
@@ -207,7 +214,7 @@ class NLog2 < Sinatra::Base
     d = Date.new(*date.map(&:to_i))
     range = d.in_time_zone...(d+1).in_time_zone
 
-    cond = Post.where(permanent: false, slug: slug_or_id)
+    cond = Post.published.where(permanent: false, slug: slug_or_id)
     if (id = Integer(slug_or_id) rescue nil)
       cond = cond.or(Post.where(id: id))
     end
@@ -227,7 +234,8 @@ class NLog2 < Sinatra::Base
   end
 
   get '/_feed.xml' do
-    @feed_posts = Post.where(permanent: false)
+    @feed_posts = Post.published
+                      .where(permanent: false)
                       .order(datetime: :desc).limit(10)
     builder :_feed
   end
@@ -239,6 +247,7 @@ class NLog2 < Sinatra::Base
   get '/_edit' do redirect '/_edit/' end
   get '/_edit/:id?' do
     authenticate!
+    @flash = {}
     if (id = params[:id])
       @post = Post.find_by(id: id) or raise Sinatra::NotFound
     else
@@ -251,7 +260,7 @@ class NLog2 < Sinatra::Base
 
   post '/_edit' do
     authenticate!
-    @flash_error = nil
+    @flash = {}
     if (id = params[:id])
       @post = Post.find_by(id: id) or raise Sinatra::NotFound
     else
@@ -265,16 +274,22 @@ class NLog2 < Sinatra::Base
     if (d = Time.zone.parse(params[:datetime]) rescue nil)
       @post.datetime = d
     else
-      @flash_error = "Failed to parse date: #{params[:datetime].inspect}"
+      @flash[:error] = "Failed to parse date: #{params[:datetime].inspect}"
       @post.datetime = Time.now
     end
 
-    if params[:submit_by] == "Save" && !@flash_error
+    if params[:submit_by] == "Save" && !@flash[:error]
       @post.published_at ||= Time.now
       if @post.save
-        redirect @post.path_to_show
+        if @post.future?
+          @flash[:notice] = "Scheduled `#{@post.title}' to be posted at #{@post.author_datetime}"
+          @post = Post.new; @post.datetime = Time.now
+          slim :edit
+        else
+          redirect @post.path_to_show
+        end
       else
-        @flash_error = "Failed to save record: #{@post.errors.messages.inspect}"
+        @flash[:error] = "Failed to save record: #{@post.errors.messages.inspect}"
         slim :edit
       end
     else
@@ -290,7 +305,7 @@ class NLog2 < Sinatra::Base
   # Permanent articles
   #
   get %r{/(\w+)} do |name|
-    @post = Post.where(permanent: true, slug: name).first
+    @post = Post.published.where(permanent: true, slug: name).first
     raise Sinatra::NotFound unless @post
     @title = @post.title
     slim :show
