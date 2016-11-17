@@ -163,6 +163,13 @@ describe 'NLog2' do
 
       expect(Post.count).to eq(count)
     end
+
+    it 'should not raise error when validation is failed' do
+      authorize 'jhon', 'passw0rd'
+      post '/_edit', @valid_params.merge(body: "", submit_by: "Save")
+
+      expect(last_response).to be_ok
+    end
   end
 
   describe 'permanent pages' do

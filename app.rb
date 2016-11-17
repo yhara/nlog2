@@ -271,8 +271,12 @@ class NLog2 < Sinatra::Base
 
     if params[:submit_by] == "Save" && !@flash_error
       @post.published_at ||= Time.now
-      @post.save!
-      redirect @post.path_to_show
+      if @post.save
+        redirect @post.path_to_show
+      else
+        @flash_error = "Failed to save record: #{@post.errors.messages.inspect}"
+        slim :edit
+      end
     else
       # Opt-out XSS Protection for this response, because it may contain
       # <script> tag (eg. embedding SpeakerDeck) which the user has written.
