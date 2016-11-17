@@ -36,6 +36,13 @@ describe 'NLog2' do
       get '/'
       expect(last_response.body).to include("TITLE")
     end
+
+    it 'should not show future post' do
+      Post.create!(@valid_posted.merge(datetime: Time.now + 3600,
+                                       title: "FUTURE POST"))
+      get '/'
+      expect(last_response.body).not_to include("FUTURE POST")
+    end
   end
 
   describe '/yyyy/dd/mm/xx' do
@@ -58,6 +65,14 @@ describe 'NLog2' do
       get "/1234/12/12/#{post.id}"
       expect(last_response.body).to include("this is body")
     end
+
+    it 'should not show future post' do
+      Post.create!(@valid_posted.merge(
+        slug: "future-post",
+        datetime: Time.utc(9999, 12, 12)))
+      get '/9999/12/12/future-post'
+      expect(last_response).to be_not_found
+    end
   end
 
   describe '/_feed.xml' do
@@ -66,6 +81,13 @@ describe 'NLog2' do
       get '/_feed.xml'
       expect(last_response.body).to start_with("<?xml")
       expect(last_response.body).to include(@valid_params[:body])
+    end
+
+    it 'should not include future post' do
+      Post.create!(@valid_posted.merge(datetime: Time.now + 3600,
+                                       title: "FUTURE POST"))
+      get '/_feed.xml'
+      expect(last_response.body).not_to include("FUTURE POST")
     end
   end
 

@@ -15,6 +15,7 @@ require 'active_support/core_ext/object/to_query'
 class Post < ActiveRecord::Base
   validates_presence_of :body, :title, :datetime, :published_at
 
+  scope :published, ->{ where('datetime <= ?', Time.now) }
   scope :future, ->{ where('datetime > ?', Time.now) }
 
   def permanent?
@@ -195,13 +196,15 @@ class NLog2 < Sinatra::Base
   #
 
   get '/' do
-    @posts = Post.where(permanent: false)
+    @posts = Post.published
+                 .where(permanent: false)
                  .order(datetime: :desc).page(params[:page]).per(10)
     slim :index
   end
 
   get '/_list' do
-    @posts = Post.where(permanent: false)
+    @posts = Post.published
+                 .where(permanent: false)
                  .order(datetime: :desc).page(params[:page]).per(100)
     slim :list
   end
@@ -211,7 +214,7 @@ class NLog2 < Sinatra::Base
     d = Date.new(*date.map(&:to_i))
     range = d.in_time_zone...(d+1).in_time_zone
 
-    cond = Post.where(permanent: false, slug: slug_or_id)
+    cond = Post.published.where(permanent: false, slug: slug_or_id)
     if (id = Integer(slug_or_id) rescue nil)
       cond = cond.or(Post.where(id: id))
     end
@@ -231,7 +234,8 @@ class NLog2 < Sinatra::Base
   end
 
   get '/_feed.xml' do
-    @feed_posts = Post.where(permanent: false)
+    @feed_posts = Post.published
+                      .where(permanent: false)
                       .order(datetime: :desc).limit(10)
     builder :_feed
   end
@@ -301,7 +305,7 @@ class NLog2 < Sinatra::Base
   # Permanent articles
   #
   get %r{/(\w+)} do |name|
-    @post = Post.where(permanent: true, slug: name).first
+    @post = Post.published.where(permanent: true, slug: name).first
     raise Sinatra::NotFound unless @post
     @title = @post.title
     slim :show
