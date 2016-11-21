@@ -54,6 +54,10 @@ class Post < ActiveRecord::Base
     self.datetime.in_time_zone
   end
 
+  def author_updated_at
+    self.updated_at.in_time_zone
+  end
+
   def slug_or_id
     return slug if slug && !slug.empty?
     return self.id.to_s
@@ -206,6 +210,9 @@ class NLog2 < Sinatra::Base
     @posts = Post.published
                  .where(permanent: false)
                  .order(datetime: :desc).page(params[:page]).per(100)
+    @articles = Post.published
+                    .where(permanent: true)
+                    .order(updated_at: :desc)
     slim :list
   end
 
