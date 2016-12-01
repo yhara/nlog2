@@ -11,7 +11,9 @@
         li 
           a href=(post.path_to_edit)
             = "#{post.title} (#{post.author_datetime})"
-
+          '
+          a href=(post.path_to_show) 
+            | (Permalink)
 
 - if params[:submit_by] == "Preview"
   .preview
