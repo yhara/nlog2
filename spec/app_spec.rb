@@ -1,12 +1,25 @@
 require 'spec_helper'
 
-describe 'NLog2' do
-  include Rack::Test::Methods
+describe 'NLog2', type: :feature do
   def app
     @app ||= NLog2
   end
 
+  def login(username='jhon', password='passw0rd')
+    encoded_login = ["#{username}:#{password}"].pack('m*')
+    page.driver.header 'Authorization', "Basic #{encoded_login}"
+  end
+
+  def fill_editor(params)
+    check "permanent" if params[:permanent]
+    fill_in "title", with: params[:title]
+    fill_in "slug", with: params[:slug]
+    fill_in "body", with: params[:body]
+    fill_in "datetime", with: params[:datetime]
+  end
+
   before :all do
+    Capybara.app = app
     @valid_params = {
       permanent: false,
       title: "TITLE",
@@ -25,23 +38,23 @@ describe 'NLog2' do
   describe '/' do
     it 'should show recent posts' do
       Post.create!(@valid_posted)
-      get '/'
-      expect(last_response.body).to include("BODY")
+      visit '/'
+      expect(page).to have_content("BODY")
     end
   end
 
   describe '/_list' do
     it 'should show the list of recent posts' do
       Post.create!(@valid_posted)
-      get '/'
-      expect(last_response.body).to include("TITLE")
+      visit '/'
+      expect(page).to have_content("TITLE")
     end
 
     it 'should not show future post' do
       Post.create!(@valid_posted.merge(datetime: Time.now + 3600,
                                        title: "FUTURE POST"))
-      get '/'
-      expect(last_response.body).not_to include("FUTURE POST")
+      visit '/'
+      expect(page).not_to have_content("FUTURE POST")
     end
   end
 
@@ -52,8 +65,8 @@ describe 'NLog2' do
         body: "this is body",
         datetime: Time.utc(1234, 12, 12),
       ))
-      get '/1234/12/12/this-is-slug'
-      expect(last_response.body).to include("this is body")
+      visit '/1234/12/12/this-is-slug'
+      expect(page).to have_content("this is body")
     end
 
     it 'should show post matching id' do
@@ -62,59 +75,56 @@ describe 'NLog2' do
         datetime: Time.utc(1234, 12, 12),
         body: "this is body",
       ))
-      get "/1234/12/12/#{post.id}"
-      expect(last_response.body).to include("this is body")
+      visit "/1234/12/12/#{post.id}"
+      expect(page).to have_content("this is body")
     end
 
     it 'should not show future post' do
       Post.create!(@valid_posted.merge(
         slug: "future-post",
         datetime: Time.utc(9999, 12, 12)))
-      get '/9999/12/12/future-post'
-      expect(last_response).to be_not_found
+      visit '/9999/12/12/future-post'
+      expect(page.status_code).to eq(404)
     end
   end
 
   describe '/_feed.xml' do
     it 'should return xml' do
       Post.create!(@valid_posted)
-      get '/_feed.xml'
-      expect(last_response.body).to start_with("<?xml")
-      expect(last_response.body).to include(@valid_params[:body])
+      visit '/_feed.xml'
+      expect(page.body).to start_with("<?xml")
+      expect(page).to have_content(@valid_params[:body])
     end
 
     it 'should not include future post' do
       Post.create!(@valid_posted.merge(datetime: Time.now + 3600,
                                        title: "FUTURE POST"))
-      get '/_feed.xml'
-      expect(last_response.body).not_to include("FUTURE POST")
+      visit '/_feed.xml'
+      expect(page).not_to have_content("FUTURE POST")
     end
   end
 
   describe '/_edit (no trailing slash)' do
     it 'should redirect to /_edit/' do
-      get '/_edit'
-      expect(last_response).to be_redirect
-      expect(last_response.header["Location"]).to end_with("/_edit/")
+      visit '/_edit'
+      expect(page.current_path).to end_with("/_edit/")
     end
   end
 
   describe '/_edit/' do
     it 'should show editor' do
-      authorize 'jhon', 'passw0rd'
-      get '/_edit/'
-      expect(last_response).to be_ok
-      expect(last_response.body).to include("form")
+      login
+      visit '/_edit/'
+      expect(page).to have_selector("form")
     end
   end
 
   describe '/_edit/:id' do
     it 'should show editor for the post' do
       post = Post.create!(@valid_posted)
-      authorize 'jhon', 'passw0rd'
-      get "/_edit/#{post.id}"
-      expect(last_response).to be_ok
-      expect(last_response.body).to include(@valid_posted[:title])
+      login
+      visit "/_edit/#{post.id}"
+      expect(page).to have_selector("input[name='title'][value='#{@valid_posted[:title]}']")
     end
   end
 
@@ -122,15 +132,21 @@ describe 'NLog2' do
     it 'should not create a record' do
       count = Post.count
 
-      authorize 'jhon', 'passw0rd'
-      post '/_edit', @valid_params.merge(submit_by: "Preview")
+      login
+      visit '/_edit/'
+      fill_editor @valid_params
+      click_button "Preview"
 
       expect(Post.count).to eq(count)
     end
 
     it 'should not raise error when failed to parse datetime' do
-      authorize 'jhon', 'passw0rd'
-      post '/_edit', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
+      login
+      visit '/_edit/'
+      expect {
+        fill_editor @valid_params.merge(datetime: "asdf")
+        click_button "Preview"
+      }.not_to raise_error
     end
   end
 
@@ -138,101 +154,105 @@ describe 'NLog2' do
     it 'creates a public post' do
       count = Post.count
       Timecop.freeze(@now) do
-        authorize 'jhon', 'passw0rd'
-        post '/_edit', @valid_params.merge(submit_by: "Save")
+        login
+        visit '/_edit/'
+        fill_editor @valid_params
+        click_button "Save"
       end
       expect(Post.count).to eq(count+1)
-      expect(last_response).to be_redirect
 
       new_post = Post.order("id desc").first
       expect(new_post.title).to eq("TITLE")
       expect(new_post.slug).to eq("SLUG")
       expect(new_post.body).to eq("BODY")
       expect(new_post.published_at).to eq(@now)
-      expect(last_response.header["Location"]).to(
+      expect(page.current_path).to(
         end_with(@now.in_time_zone.strftime("/%Y/%m/%d/SLUG")))
     end
 
     it 'updates a post' do
       existing = Post.create!(@valid_posted)
 
-      authorize 'jhon', 'passw0rd'
-      post '/_edit', title: "TITLE2", slug: "SLUG2", body: "BODY2",
-                     datetime: "1234-12-12 12:12:12",
-                     id: existing.id, permanent: false, submit_by: "Save"
+      login
+      visit "/_edit/#{existing.id}"
+      fill_editor title: "TITLE2", slug: "SLUG2", body: "BODY2",
+                  datetime: "1234-12-12 12:12:12", permanent: false
+      click_button "Save"
 
       updated = Post.find_by!(id: existing.id)
       expect(updated.title).to eq("TITLE2")
       expect(updated.slug).to eq("SLUG2")
       expect(updated.body).to eq("BODY2")
-      expect(last_response.header["Location"]).to(
-        end_with("/1234/12/12/SLUG2"))
+      expect(page.current_path).to(end_with("/1234/12/12/SLUG2"))
     end
 
     it 'should redirect to url without date when post is permanent' do
-      authorize 'jhon', 'passw0rd'
-      post '/_edit', @valid_params.merge(permanent: "yes", submit_by: "Save")
-      url = last_response.header["Location"]
-      expect(url).not_to match(%r{/\d\d\d\d/\d\d/\d\d})
-      expect(url).to end_with("SLUG")
+      login
+      visit '/_edit'
+      fill_editor @valid_params.merge(permanent: true)
+      click_button "Save"
+
+      expect(page.current_path).not_to match(%r{/\d\d\d\d/\d\d/\d\d})
+      expect(page.current_path).to end_with("SLUG")
     end
 
     context 'when saving future post' do
       it 'should show edit page again' do
-        authorize 'jhon', 'passw0rd'
-        post '/_edit', @valid_params.merge(datetime: Time.now + 3600, submit_by: "Save")
-        expect(last_response).to be_ok  # Not redirect
+        login
+        visit '/_edit'
+        fill_editor @valid_params.merge(datetime: (Time.now + 3600).to_s)
+        click_button "Save"
+
+        expect(page.current_path).to eq("/_edit")
       end
     end
 
     it 'should not raise error when failed to parse datetime' do
-      count = Post.count
-
-      authorize 'jhon', 'passw0rd'
-      post '/_edit', @valid_params.merge(datetime: "asdf", submit_by: "Preview")
-
-      expect(Post.count).to eq(count)
+      login
+      visit '/_edit'
+      expect {
+        fill_editor @valid_params.merge(datetime: "asdf")
+        click_button "Preview"
+      }.not_to raise_error
     end
 
-    it 'should not raise error when validation is failed' do
-      authorize 'jhon', 'passw0rd'
-      post '/_edit', @valid_params.merge(body: "", submit_by: "Save")
+    it 'should not create a post when validation is failed' do
+      count = Post.count
 
-      expect(last_response).to be_ok
+      login
+      visit '/_edit'
+      fill_editor @valid_params.merge(body: "")
+      click_button "Save"
+
+      expect(Post.count).to eq(count)
     end
   end
 
   describe 'permanent pages' do
     it 'should be accessible without date' do
       Post.create!(@valid_posted.merge(permanent: true))
-      get "/SLUG"
-      expect(last_response.body).to include("BODY")
+      visit "/SLUG"
+      expect(page).to have_content("BODY")
     end
   end
 
   context 'when timezone is set' do
-    describe 'Post' do
-      it 'should format post url in that timezone' do
-        post = Post.create!(@valid_posted.merge(
-          datetime: '2016-10-07 23:00:00 UTC', slug: 'tz-post'))
-        expect(post.path_to_show).to eq('/2016/10/08/tz-post')
-      end
-    end
-
     describe 'post url' do
       it 'should have a date in that timezone' do
         post = Post.create!(@valid_posted.merge(
           datetime: '2016-10-07 23:00:00 UTC', slug: 'tz-test'))
-        get '/2016/10/08/tz-test'
-        expect(last_response.body).to include("BODY")
+        visit '/2016/10/08/tz-test'
+        expect(page).to have_content("BODY")
       end
     end
 
     describe 'editor' do
       it 'should parse datetime in that timezone' do
-        authorize 'jhon', 'passw0rd'
-        post '/_edit', @valid_params.merge(datetime: '1234-12-12 00:00:00',
-                                           submit_by: "Save")
+        login
+        visit '/_edit'
+        fill_editor @valid_params.merge(datetime: '1234-12-12 00:00:00')
+        click_button "Save"
+                   
         new_post = Post.order("id desc").first
         expect(new_post.datetime).to eq(Time.parse("1234-12-12 00:00:00 +1000").utc)
       end

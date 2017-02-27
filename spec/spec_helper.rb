@@ -1,5 +1,6 @@
 ENV['RACK_ENV'] = "test"
 require 'rack/test'
+require 'capybara/rspec'
 #require 'database_rewinder'
 require 'timecop'
 

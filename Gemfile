@@ -24,6 +24,7 @@ group :test do
   gem 'rack-test'
   gem 'database_rewinder'
   gem 'timecop'
+  gem 'capybara'
 end
 
 # Deploy
