@@ -31,7 +31,7 @@ describe 'NLog2', type: :feature do
   end
 
   before :each do
-    Post.delete_all
+    Post.dataset.delete
     @now = Time.now.utc
   end
 

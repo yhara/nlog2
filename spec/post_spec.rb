@@ -12,7 +12,7 @@ describe 'Post' do
   end
 
   before :each do
-    Post.delete_all
+    Post.dataset.delete
   end
 
   describe '#slug_or_id' do
