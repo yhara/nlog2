@@ -32,7 +32,6 @@ class NLog2 < Sinatra::Base
     NLog2.logger = Logger.new(file)
 
     use Rack::CommonLogger, NLog2.logger
-    ActiveRecord::Base.logger = NLog2.logger
   end
 
   before do

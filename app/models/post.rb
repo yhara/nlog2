@@ -1,7 +1,9 @@
+# NOTE: this file should be loaded after NLog2.init
 require 'sequel'
 
 env = ENV['RACK_ENV'] || 'development'
 DB = Sequel.sqlite(NLog2.config[:db].fetch(env.to_sym))
+DB.loggers << NLog2.logger
 DB.extension(:pagination)
 
 class Post < Sequel::Model
