@@ -1,4 +1,5 @@
 require 'time'
+require 'logger'
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'bcrypt'

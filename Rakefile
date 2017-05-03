@@ -1,4 +1,4 @@
-require "sinatra/activerecord/rake"
+require 'yaml'
 require 'irb'
 require 'securerandom'
 require 'bcrypt'
@@ -14,7 +14,8 @@ end
 
 desc "Open irb with ActiveRecord"
 task :console do
-  require "./app"
+  require_relative "app/nlog2.rb"
+  NLog2.init("#{__dir__}/config/nlog2.yml")
   ARGV.clear  # To prevent `Errno::ENOENT: No such file or directory @ rb_sysopen - console`
   IRB.start
 end
