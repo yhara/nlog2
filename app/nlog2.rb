@@ -94,17 +94,17 @@ class NLog2 < Sinatra::Base
   get '/' do
     @posts = Post.published
                  .where(permanent: false)
-                 .order(datetime: :desc).paginate(params[:page] || 1, 10)
+                 .order(Sequel.desc(:datetime)).paginate(params[:page] || 1, 10)
     slim :index
   end
 
   get '/_list' do
     @posts = Post.published
                  .where(permanent: false)
-                 .order(datetime: :desc).paginage(params[:page] || 1, 100)
+                 .order(Sequel.desc(:datetime)).paginage(params[:page] || 1, 100)
     @articles = Post.published
                     .where(permanent: true)
-                    .order(updated_at: :desc)
+                    .order(Sequel.desc(:updated_at))
     slim :list
   end
 
@@ -135,7 +135,7 @@ class NLog2 < Sinatra::Base
   get '/_feed.xml' do
     @feed_posts = Post.published
                       .where(permanent: false)
-                      .order(datetime: :desc).limit(10)
+                      .order(Sequel.desc(:datetime)).limit(10)
     builder :_feed
   end
 
