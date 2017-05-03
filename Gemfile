@@ -17,6 +17,7 @@ gem 'rouge'
 # Database 
 gem 'sinatra-activerecord', git: 'https://github.com/yhara/sinatra-activerecord', branch: 'sinatra2'
 gem 'sqlite3'
+gem 'sequel'
 
 # Test
 group :test do

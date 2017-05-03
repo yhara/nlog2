@@ -128,6 +128,7 @@ GEM
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
     sass (3.4.22)
+    sequel (4.43.0)
     sinatra (2.0.0.beta2)
       mustermann (= 1.0.0.beta2)
       rack (~> 2.0)
@@ -177,6 +178,7 @@ DEPENDENCIES
   rouge
   rspec
   sass
+  sequel
   sinatra (= 2.0.0.beta2)
   sinatra-activerecord!
   sinatra-contrib (= 2.0.0.beta2)
