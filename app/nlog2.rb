@@ -11,21 +11,19 @@ require 'kaminari/sinatra'
 require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
-# Database
-require 'sinatra/activerecord'
-require_relative 'models/post.rb'
 
 class NLog2 < Sinatra::Base
   class NotFound < StandardError; end
 
   def self.config; @@config or raise; end
-  def self.load_config(path)
-    @@config = YAML.load_file(path)
+  # Set config and connect to the database
+  def self.init(config_path)
+    @@config = YAML.load_file(config_path)
+    require_relative 'models/post.rb'
   end
   def self.logger; @@logger or raise; end
   def self.logger=(l); @@logger=l; end
 
-  register Sinatra::ActiveRecordExtension
   configure(:development){ register Sinatra::Reloader }
 
   configure do

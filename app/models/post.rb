@@ -1,6 +1,9 @@
-require 'active_record'
+require 'sequel'
 
-class Post < ActiveRecord::Base
+env = ENV['RACK_ENV'] || 'development'
+DB = Sequel.sqlite(NLog2.config[:db].fetch(env.to_sym))
+
+class Post < Sequel::Model
   validates_presence_of :body, :title, :datetime, :published_at
 
   scope :published, ->{ where('datetime <= ?', Time.now) }

@@ -6,7 +6,7 @@ require 'timecop'
 
 require_relative '../app/nlog2.rb'
 
-NLog2.load_config("#{__dir__}/../config/nlog2.yml.example")
+NLog2.init("#{__dir__}/../config/nlog2.yml.example")
 Time.zone = NLog2.config[:timezone]
 
 RSpec.configure do |config|

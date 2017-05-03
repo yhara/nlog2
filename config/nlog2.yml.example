@@ -1,3 +1,4 @@
+# Blog metadata
 :blog:
   :url: "http://yhara.jp"
   :title: "My Blog"
@@ -5,6 +6,12 @@
   :author: "Jhon"
   # (Optional) Google Analytics Tracking ID
   :ga_tracking_id:
+
+# Database settings (Only sqlite3 is supported currently)
+:db:
+  :development: "db/development.sqlite3"
+  :test: "db/test.sqlite3"
+  :production: "db/nlog2.sqlite3"
 
 # Advertizements (Optional)
 # :ads:
