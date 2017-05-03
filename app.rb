@@ -2,15 +2,17 @@ require 'time'
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'bcrypt'
+require 'active_support/core_ext/date'
+require 'active_support/core_ext/object/to_query'
+# View
 require 'slim'
 require 'sass'
-require 'sinatra/activerecord'
-require 'active_support/core_ext/date'
+require 'kaminari/sinatra'
 require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
-require 'kaminari/sinatra'
-require 'active_support/core_ext/object/to_query'
+# Database
+require 'sinatra/activerecord'
 
 class Post < ActiveRecord::Base
   validates_presence_of :body, :title, :datetime, :published_at
