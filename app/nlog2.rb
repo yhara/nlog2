@@ -7,7 +7,6 @@ require 'active_support/core_ext/object/to_query'
 # View
 require 'slim'
 require 'sass'
-require 'kaminari/sinatra'
 require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
@@ -95,14 +94,14 @@ class NLog2 < Sinatra::Base
   get '/' do
     @posts = Post.published
                  .where(permanent: false)
-                 .order(datetime: :desc).page(params[:page]).per(10)
+                 .order(datetime: :desc).paginate(params[:page] || 1, 10)
     slim :index
   end
 
   get '/_list' do
     @posts = Post.published
                  .where(permanent: false)
-                 .order(datetime: :desc).page(params[:page]).per(100)
+                 .order(datetime: :desc).paginage(params[:page] || 1, 100)
     @articles = Post.published
                     .where(permanent: true)
                     .order(updated_at: :desc)

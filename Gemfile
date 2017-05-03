@@ -11,7 +11,6 @@ gem 'slim'
 gem 'sass'
 gem 'redcarpet'
 gem 'builder'
-gem 'kaminari-sinatra'
 gem 'rouge'
 
 # Database 

@@ -2,6 +2,7 @@ require 'sequel'
 
 env = ENV['RACK_ENV'] || 'development'
 DB = Sequel.sqlite(NLog2.config[:db].fetch(env.to_sym))
+DB.extension(:pagination)
 
 class Post < Sequel::Model
   plugin :validation_helpers
