@@ -26,8 +26,6 @@ class NLog2 < Sinatra::Base
   register Sinatra::ActiveRecordExtension
   configure(:development){ register Sinatra::Reloader }
 
-  set :views, "#{__dir__}/../views"
-
   configure do
     enable :logging
     file = File.new("#{__dir__}/../log/#{settings.environment}.log", 'a+')
