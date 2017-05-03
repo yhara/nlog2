@@ -37,7 +37,7 @@ describe 'NLog2', type: :feature do
 
   describe '/' do
     it 'should show recent posts' do
-      Post.create!(@valid_posted)
+      Post.create(@valid_posted)
       visit '/'
       expect(page).to have_content("BODY")
     end
@@ -45,13 +45,13 @@ describe 'NLog2', type: :feature do
 
   describe '/_list' do
     it 'should show the list of recent posts' do
-      Post.create!(@valid_posted)
+      Post.create(@valid_posted)
       visit '/'
       expect(page).to have_content("TITLE")
     end
 
     it 'should not show future post' do
-      Post.create!(@valid_posted.merge(datetime: Time.now + 3600,
+      Post.create(@valid_posted.merge(datetime: Time.now + 3600,
                                        title: "FUTURE POST"))
       visit '/'
       expect(page).not_to have_content("FUTURE POST")
@@ -60,7 +60,7 @@ describe 'NLog2', type: :feature do
 
   describe '/yyyy/dd/mm/xx' do
     it 'should show post matching slug' do
-      Post.create!(@valid_posted.merge(
+      Post.create(@valid_posted.merge(
         slug: "this-is-slug",
         body: "this is body",
         datetime: Time.utc(1234, 12, 12),
@@ -70,7 +70,7 @@ describe 'NLog2', type: :feature do
     end
 
     it 'should show post matching id' do
-      post = Post.create!(@valid_posted.merge(
+      post = Post.create(@valid_posted.merge(
         slug: nil,
         datetime: Time.utc(1234, 12, 12),
         body: "this is body",
@@ -80,7 +80,7 @@ describe 'NLog2', type: :feature do
     end
 
     it 'should not show future post' do
-      Post.create!(@valid_posted.merge(
+      Post.create(@valid_posted.merge(
         slug: "future-post",
         datetime: Time.utc(9999, 12, 12)))
       visit '/9999/12/12/future-post'
@@ -90,14 +90,14 @@ describe 'NLog2', type: :feature do
 
   describe '/_feed.xml' do
     it 'should return xml' do
-      Post.create!(@valid_posted)
+      Post.create(@valid_posted)
       visit '/_feed.xml'
       expect(page.body).to start_with("<?xml")
       expect(page).to have_content(@valid_params[:body])
     end
 
     it 'should not include future post' do
-      Post.create!(@valid_posted.merge(datetime: Time.now + 3600,
+      Post.create(@valid_posted.merge(datetime: Time.now + 3600,
                                        title: "FUTURE POST"))
       visit '/_feed.xml'
       expect(page).not_to have_content("FUTURE POST")
@@ -121,7 +121,7 @@ describe 'NLog2', type: :feature do
 
   describe '/_edit/:id' do
     it 'should show editor for the post' do
-      post = Post.create!(@valid_posted)
+      post = Post.create(@valid_posted)
       login
       visit "/_edit/#{post.id}"
       expect(page).to have_selector("input[name='title'][value='#{@valid_posted[:title]}']")
@@ -171,7 +171,7 @@ describe 'NLog2', type: :feature do
     end
 
     it 'updates a post' do
-      existing = Post.create!(@valid_posted)
+      existing = Post.create(@valid_posted)
 
       login
       visit "/_edit/#{existing.id}"
@@ -230,7 +230,7 @@ describe 'NLog2', type: :feature do
 
   describe 'permanent pages' do
     it 'should be accessible without date' do
-      Post.create!(@valid_posted.merge(permanent: true))
+      Post.create(@valid_posted.merge(permanent: true))
       visit "/SLUG"
       expect(page).to have_content("BODY")
     end
@@ -239,7 +239,7 @@ describe 'NLog2', type: :feature do
   context 'when timezone is set' do
     describe 'post url' do
       it 'should have a date in that timezone' do
-        post = Post.create!(@valid_posted.merge(
+        post = Post.create(@valid_posted.merge(
           datetime: '2016-10-07 23:00:00 UTC', slug: 'tz-test'))
         visit '/2016/10/08/tz-test'
         expect(page).to have_content("BODY")
