@@ -58,10 +58,6 @@ class NLog2 < Sinatra::Base
            correct_pass.is_password?(password)
   end
 
-  error ActiveRecord::RecordNotFound do
-    halt 404, 'not found'
-  end
-
   error do
     ex = env['sinatra.error']
     logger.error("#{ex.class}: #{ex.message}")
