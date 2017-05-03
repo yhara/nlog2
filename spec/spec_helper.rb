@@ -5,7 +5,6 @@ require 'capybara/rspec'
 require 'timecop'
 
 require_relative '../app/nlog2.rb'
-require_relative '../app/post.rb'
 
 NLog2.load_config("#{__dir__}/../config/nlog2.yml.example")
 Time.zone = NLog2.config[:timezone]

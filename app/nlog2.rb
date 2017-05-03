@@ -4,7 +4,6 @@ require 'sinatra/reloader'
 require 'bcrypt'
 require 'active_support/core_ext/date'
 require 'active_support/core_ext/object/to_query'
-require 'sinatra/activerecord'
 # View
 require 'slim'
 require 'sass'
@@ -12,6 +11,9 @@ require 'kaminari/sinatra'
 require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
+# Database
+require 'sinatra/activerecord'
+require_relative 'models/post.rb'
 
 class NLog2 < Sinatra::Base
   class NotFound < StandardError; end
