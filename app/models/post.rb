@@ -9,8 +9,13 @@ class Post < Sequel::Model
     validates_presence [:body, :title, :datetime, :published_at]
   end
 
-  scope :published, ->{ where('datetime <= ?', Time.now) }
-  scope :future, ->{ where('datetime > ?', Time.now) }
+  def self.published
+    Post.where('datetime <= ?', Time.now)
+  end
+
+  def self.future
+    Post.where('datetime > ?', Time.now)
+  end
 
   def permanent?
     permanent
