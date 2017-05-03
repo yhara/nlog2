@@ -4,7 +4,10 @@ env = ENV['RACK_ENV'] || 'development'
 DB = Sequel.sqlite(NLog2.config[:db].fetch(env.to_sym))
 
 class Post < Sequel::Model
-  validates_presence_of :body, :title, :datetime, :published_at
+  plugin :validation_helpers
+  def validate
+    validates_presence [:body, :title, :datetime, :published_at]
+  end
 
   scope :published, ->{ where('datetime <= ?', Time.now) }
   scope :future, ->{ where('datetime > ?', Time.now) }
