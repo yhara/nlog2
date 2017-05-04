@@ -107,7 +107,7 @@ class NLog2 < Sinatra::Base
   get %r{/(\d\d\d\d)/(\d\d)/(\d\d)/(.+)} do
     *date, slug_or_id = *params[:captures]
     d = Date.new(*date.map(&:to_i))
-    range = d.in_time_zone...(d+1).in_time_zone
+    range = d.in_time_zone.utc...(d+1).in_time_zone.utc
 
     cond = Post.published.where(permanent: false, slug: slug_or_id)
     if (id = Integer(slug_or_id) rescue nil)
