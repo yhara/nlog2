@@ -111,7 +111,7 @@ class NLog2 < Sinatra::Base
 
     cond = Post.published.where(permanent: false, slug: slug_or_id)
     if (id = Integer(slug_or_id) rescue nil)
-      cond = cond.or(Post.where(id: id))
+      cond = cond.or(id: id)
     end
 
     @post = cond.where(datetime: range).first or raise Sinatra::NotFound
