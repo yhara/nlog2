@@ -1,14 +1,7 @@
 require 'spec_helper'
 
 describe 'NLog2', type: :feature do
-  def app
-    @app ||= NLog2
-  end
-
-  def login(username='jhon', password='passw0rd')
-    encoded_login = ["#{username}:#{password}"].pack('m*')
-    page.driver.header 'Authorization', "Basic #{encoded_login}"
-  end
+  include NLog2::IntegrationTest
 
   def fill_editor(params)
     check "permanent" if params[:permanent]
