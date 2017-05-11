@@ -26,7 +26,10 @@ class NLog2 < Sinatra::Base
   def self.logger=(l); @@logger=l; end
 
   register Sinatra::ActiveRecordExtension
-  configure(:development){ register Sinatra::Reloader }
+  configure(:development) do
+    register Sinatra::Reloader
+    also_reload 'app/**/*.rb'
+  end
 
   configure do
     enable :logging
