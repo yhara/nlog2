@@ -14,6 +14,7 @@ require 'rouge/plugins/redcarpet'
 # Database
 require 'sinatra/activerecord'
 require_relative 'models/post.rb'
+require_relative 'models/category.rb'
 
 class NLog2 < Sinatra::Base
   class NotFound < StandardError; end
@@ -32,6 +33,8 @@ class NLog2 < Sinatra::Base
   end
 
   configure do
+    enable :mehtod_override
+
     enable :logging
     file = File.new("#{__dir__}/../log/#{settings.environment}.log", 'a+')
     file.sync = true
@@ -203,6 +206,30 @@ class NLog2 < Sinatra::Base
       headers "X-XSS-Protection" => "0" 
       @title = "Edit"
       slim :edit
+    end
+  end
+
+  #
+  # Config
+  #
+  get '/_config/' do redirect '/_config' end
+  get '/_config' do
+    authenticate!
+    @flash = {}
+
+    slim :config
+  end
+
+  post '/_categories/' do
+    authenticate!
+    @flash = {}
+
+    category = Category.new(name: @params[:name])
+    if !category.save
+      @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
+      slim :config
+    else
+      redirect '/_config'
     end
   end
 
