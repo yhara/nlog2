@@ -3,18 +3,12 @@ require 'irb'
 require 'securerandom'
 require 'bcrypt'
 require 'io/console'
+require_relative 'app/nlog2.rb'
 
 $config = YAML.load_file("config/nlog2.yml")
 
-namespace :db do
-  task :load_config do
-    require "./app"
-  end
-end
-
 desc "Open irb with ActiveRecord"
 task :console do
-  require "./app"
   ARGV.clear  # To prevent `Errno::ENOENT: No such file or directory @ rb_sysopen - console`
   IRB.start
 end
