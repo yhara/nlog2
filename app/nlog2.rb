@@ -33,7 +33,7 @@ class NLog2 < Sinatra::Base
   end
 
   configure do
-    enable :mehtod_override
+    enable :method_override
 
     enable :logging
     file = File.new("#{__dir__}/../log/#{settings.environment}.log", 'a+')
@@ -231,6 +231,14 @@ class NLog2 < Sinatra::Base
     else
       redirect '/_config'
     end
+  end
+
+  delete '/_categories/:id' do
+    authenticate!
+    category = Category.find_by!(id: params[:id])
+    category.destroy
+
+    redirect '/_config'
   end
 
   #
