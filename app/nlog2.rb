@@ -225,11 +225,11 @@ class NLog2 < Sinatra::Base
     @flash = {}
 
     category = Category.new(name: @params[:name])
-    if !category.save
+    if category.save
+      redirect '/_config'
+    else
       @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
       slim :config
-    else
-      redirect '/_config'
     end
   end
 
@@ -238,11 +238,11 @@ class NLog2 < Sinatra::Base
     category = Category.find_by!(id: params[:id])
     category.name = params[:name]
 
-    if !category.save
+    if category.save
+      redirect '/_config'
+    else
       @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
       slim :config
-    else
-      redirect '/_config'
     end
   end
 
