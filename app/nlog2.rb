@@ -233,6 +233,19 @@ class NLog2 < Sinatra::Base
     end
   end
 
+  put '/_categories/:id' do
+    authenticate!
+    category = Category.find_by!(id: params[:id])
+    category.name = params[:name]
+
+    if !category.save
+      @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
+      slim :config
+    else
+      redirect '/_config'
+    end
+  end
+
   delete '/_categories/:id' do
     authenticate!
     category = Category.find_by!(id: params[:id])

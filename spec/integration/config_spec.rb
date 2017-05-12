@@ -33,10 +33,22 @@ describe 'NLog2 config', type: :feature do
       it 'should create new category' do
         login
         visit '/_config'
-        fill_in "name", with: "Category1"
+        find("form.create-category input[name=name]").set("Category1")
         click_button "create"
 
         expect(Category.find_by(name: "Category1")).to be_truthy
+      end
+    end
+
+    describe 'rename button' do
+      it 'should update that category' do
+        Category.create!(name: "Category1")
+        login
+        visit '/_config'
+        find("form.update-category input[name=name]").set("Category1")
+        click_button "delete(no confirm)", disabled: true
+
+        expect(Category.find_by(name: "Category1")).to be_nil
       end
     end
 
