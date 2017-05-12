@@ -23,7 +23,7 @@ table.categories
       td
         form action="/_categories/#{cat.id}" method="POST"
           input type="hidden" name="_method" value="DELETE"
-          input type="submit" value="delete(no confirm)"
+          input type="submit" value="delete(no confirm)" disabled="disabled"
 
 form action="/_categories/" method="POST"
   input type="text" name="name"
