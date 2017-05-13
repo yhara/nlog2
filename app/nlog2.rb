@@ -15,6 +15,9 @@ require 'rouge/plugins/redcarpet'
 require 'sinatra/activerecord'
 require_relative 'models/post.rb'
 require_relative 'models/category.rb'
+require_relative 'controllers/blog.rb'
+require_relative 'controllers/edit.rb'
+require_relative 'controllers/config.rb'
 
 class NLog2 < Sinatra::Base
   class NotFound < StandardError; end
@@ -34,6 +37,7 @@ class NLog2 < Sinatra::Base
 
   configure do
     enable :method_override
+    set :views, "#{__dir__}/views"
 
     enable :logging
     file = File.new("#{__dir__}/../log/#{settings.environment}.log", 'a+')
@@ -79,183 +83,9 @@ class NLog2 < Sinatra::Base
   end
 
   #
-  # View Helpers
-  #
-
-  helpers do
-    def previous_page_path(scope, params={})
-      return nil if scope.first_page?
-      query = params.merge(page: scope.prev_page)
-      return env['PATH_INFO'] + (query.empty? ? '' : "?#{query.to_query}")
-    end
-
-    def next_page_path(scope, params={})
-      return nil if scope.last_page?
-      query = params.merge(page: scope.next_page)
-      return env['PATH_INFO'] + (query.empty? ? '' : "?#{query.to_query}")
-    end
-  end
-
-  #
-  # Show
-  #
-
-  get '/' do
-    @posts = Post.published
-                 .where(permanent: false)
-                 .order(datetime: :desc).page(params[:page]).per(10)
-    slim :index
-  end
-
-  get '/_list' do
-    @posts = Post.published
-                 .where(permanent: false)
-                 .order(datetime: :desc).page(params[:page]).per(100)
-    @articles = Post.published
-                    .where(permanent: true)
-                    .order(updated_at: :desc)
-    slim :list
-  end
-
-  get %r{/(\d\d\d\d)/(\d\d)/(\d\d)/(.+)} do
-    *date, slug_or_id = *params[:captures]
-    d = Date.new(*date.map(&:to_i))
-    range = d.in_time_zone...(d+1).in_time_zone
-
-    cond = Post.published.where(permanent: false, slug: slug_or_id)
-    if (id = Integer(slug_or_id) rescue nil)
-      cond = cond.or(Post.where(id: id))
-    end
-
-    @post = cond.where(datetime: range).first or raise Sinatra::NotFound
-    @title = @post.title
-    slim :show
-  end
-
-  get '/screen.css' do
-    sass :screen  # renders views/screen.sass as screen.css
-  end
-
-  get '/highlight.css' do
-    headers 'Content-Type' => 'text/css'
-    Rouge::Themes::Github.render(scope: '.highlight')
-  end
-
-  get '/_feed.xml' do
-    @feed_posts = Post.published
-                      .where(permanent: false)
-                      .order(datetime: :desc).limit(10)
-    builder :_feed
-  end
-
-  #
-  # Edit
-  #
-  
-  get '/_edit' do redirect '/_edit/' end
-  get '/_edit/:id?' do
-    authenticate!
-    @flash = {}
-    if (id = params[:id])
-      @post = Post.find_by(id: id) or raise Sinatra::NotFound
-    else
-      @post = Post.new
-      @post.datetime = Time.now
-    end
-    @title = "Edit"
-    slim :edit
-  end
-
-  post '/_edit' do
-    authenticate!
-    @flash = {}
-    if (id = params[:id])
-      @post = Post.find_by(id: id) or raise Sinatra::NotFound
-    else
-      @post = Post.new
-    end
-
-    @post.permanent = (params[:permanent] == "yes")
-    @post.title = params[:title]
-    @post.slug = params[:slug]
-    @post.body = params[:body]
-    if (d = Time.zone.parse(params[:datetime]) rescue nil)
-      @post.datetime = d
-    else
-      @flash[:error] = "Failed to parse date: #{params[:datetime].inspect}"
-      @post.datetime = Time.now
-    end
-
-    if params[:submit_by] == "Save" && !@flash[:error]
-      @post.published_at ||= Time.now
-      if @post.save
-        if @post.future?
-          @flash[:notice] = "Scheduled `#{@post.title}' to be posted at #{@post.author_datetime}"
-          @post = Post.new; @post.datetime = Time.now
-          slim :edit
-        else
-          redirect @post.path_to_show
-        end
-      else
-        @flash[:error] = "Failed to save record: #{@post.errors.messages.inspect}"
-        slim :edit
-      end
-    else
-      # Opt-out XSS Protection for this response, because it may contain
-      # <script> tag (eg. embedding SpeakerDeck) which the user has written.
-      headers "X-XSS-Protection" => "0" 
-      @title = "Edit"
-      slim :edit
-    end
-  end
-
-  #
-  # Config
-  #
-  get '/_config/' do redirect '/_config' end
-  get '/_config' do
-    authenticate!
-    @flash = {}
-
-    slim :config
-  end
-
-  post '/_categories/' do
-    authenticate!
-    @flash = {}
-
-    category = Category.new(name: @params[:name])
-    if category.save
-      redirect '/_config'
-    else
-      @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
-      slim :config
-    end
-  end
-
-  put '/_categories/:id' do
-    authenticate!
-    category = Category.find_by!(id: params[:id])
-    category.name = params[:name]
-
-    if category.save
-      redirect '/_config'
-    else
-      @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
-      slim :config
-    end
-  end
-
-  delete '/_categories/:id' do
-    authenticate!
-    category = Category.find_by!(id: params[:id])
-    category.destroy
-
-    redirect '/_config'
-  end
-
-  #
   # Permanent articles
+  # This must be the final route definition because this regexp
+  # matches other routes
   #
   get %r{/(\w+)} do |name|
     @post = Post.published.where(permanent: true, slug: name).first
