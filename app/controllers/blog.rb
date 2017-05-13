@@ -46,6 +46,14 @@ class NLog2 < Sinatra::Base
     slim :show
   end
 
+  # Permanent articles (must not start with `_')
+  get %r{/([^_]\w+)} do |name|
+    @post = Post.published.where(permanent: true, slug: name).first
+    raise Sinatra::NotFound unless @post
+    @title = @post.title
+    slim :show
+  end
+
   get '/screen.css' do
     sass :screen  # renders views/screen.sass as screen.css
   end

@@ -81,16 +81,4 @@ class NLog2 < Sinatra::Base
     Array(ex.backtrace).each(&logger.method(:error))
     halt 500, 'internal server error'
   end
-
-  #
-  # Permanent articles
-  # This must be the final route definition because this regexp
-  # matches other routes
-  #
-  get %r{/(\w+)} do |name|
-    @post = Post.published.where(permanent: true, slug: name).first
-    raise Sinatra::NotFound unless @post
-    @title = @post.title
-    slim :show
-  end
 end
