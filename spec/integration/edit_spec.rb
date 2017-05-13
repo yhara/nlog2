@@ -9,16 +9,20 @@ describe 'NLog2 edit', type: :feature do
     fill_in "slug", with: params[:slug]
     fill_in "body", with: params[:body]
     fill_in "datetime", with: params[:datetime]
+    select params[:category].name, from: "category"
   end
 
   before :all do
     Capybara.app = app
+    Category.delete_all
+    @category1 = Category.create!(name: "Category1")
     @valid_params = {
       permanent: false,
       title: "TITLE",
       slug: "SLUG",
       body: "BODY",
       datetime: Time.now.to_s,
+      category: @category1,
     }
     @valid_posted = @valid_params.merge(published_at: Time.now)
   end
@@ -90,6 +94,7 @@ describe 'NLog2 edit', type: :feature do
       expect(new_post.slug).to eq("SLUG")
       expect(new_post.body).to eq("BODY")
       expect(new_post.published_at).to eq(@now)
+      expect(new_post.category).to eq(@category1)
       expect(page.current_path).to(
         end_with(@now.in_time_zone.strftime("/%Y/%m/%d/SLUG")))
     end
@@ -100,7 +105,8 @@ describe 'NLog2 edit', type: :feature do
       login
       visit "/_edit/#{existing.id}"
       fill_editor title: "TITLE2", slug: "SLUG2", body: "BODY2",
-                  datetime: "1234-12-12 12:12:12", permanent: false
+                  datetime: "1234-12-12 12:12:12", permanent: false,
+                  category: @category1
       click_button "Save"
 
       updated = Post.find_by!(id: existing.id)

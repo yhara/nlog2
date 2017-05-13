@@ -39,6 +39,12 @@ form action="/_edit" method="POST"
     ' Slug
     input type="text" name="slug" size=40 value=(@post.slug)
   div
+    ' Category
+    select name="category"
+      - Category.list.each do |cat|
+        option value=(cat.id) 
+          = cat.name
+  div
     textarea name="body" rows=20 cols=100
       = @post.body
   div

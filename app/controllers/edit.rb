@@ -32,6 +32,7 @@ class NLog2 < Sinatra::Base
       @flash[:error] = "Failed to parse date: #{params[:datetime].inspect}"
       @post.datetime = Time.now
     end
+    @post.category = Category.find_by!(id: params[:category].to_i)
 
     if params[:submit_by] == "Save" && !@flash[:error]
       @post.published_at ||= Time.now
