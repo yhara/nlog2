@@ -8,6 +8,13 @@ class Post < ActiveRecord::Base
   scope :published, ->{ where('datetime <= ?', Time.now) }
   scope :future, ->{ where('datetime > ?', Time.now) }
   scope :uncategorized, ->{ where('category_id IS NULL') }
+  scope :with_category, ->(cat){
+    if cat
+      where(category: cat)
+    else
+      all
+    end
+  }
 
   def permanent?
     permanent

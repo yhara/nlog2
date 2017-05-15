@@ -1,9 +1,4 @@
-ul
-  - @posts.each do |post|
-    li
-      span = post.author_date
-      '
-      a href=(post.path_to_show) = post.title
+== slim :_post_list, locals: {posts: @posts}
 
 div
   - unless @posts.first_page? 
@@ -16,9 +11,4 @@ div
 
 h2 Articles
 
-ul
-  - @articles.each do |post|
-    li
-      span = post.author_updated_at.to_date
-      '
-      a href=(post.path_to_show) = post.title
+== slim :_post_list, locals: {posts: @articles}

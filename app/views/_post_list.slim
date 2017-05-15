@@ -1,0 +1,12 @@
+ul
+  - posts.each do |post|
+    li
+      span = (post.permanent? ? post.author_updated_at.to_date : post.author_date)
+      '
+      - if (cat = post.category)
+        | [
+        a href="/_list?category=#{Rack::Utils.escape cat.name}"
+          = "#{cat.name}"
+        ' ]
+      a href=(post.path_to_show) = post.title
+

@@ -10,6 +10,10 @@
     div
       = post.author_date
 
+  - if (cat = post.category)
+    a href="/?category=#{Rack::Utils.escape cat.name}"
+      = cat.name
+
   div
     == post.rendered_body
 

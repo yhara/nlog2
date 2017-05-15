@@ -1,31 +1,56 @@
 class NLog2 < Sinatra::Base
   # View Helpers
   helpers do
-    def previous_page_path(scope, params={})
+    KEEP_KEYS = [:category, :per]
+    def keep_params
+      return KEEP_KEYS.map{|s| [s, params[s]]}
+             .reject{|k, v| v.nil?}
+             .to_h
+    end
+
+    def previous_page_path(scope)
       return nil if scope.first_page?
-      query = params.merge(page: scope.prev_page)
+      query = keep_params.merge(page: scope.prev_page)
       return env['PATH_INFO'] + (query.empty? ? '' : "?#{query.to_query}")
     end
 
-    def next_page_path(scope, params={})
+    def next_page_path(scope)
       return nil if scope.last_page?
-      query = params.merge(page: scope.next_page)
+      query = keep_params.merge(page: scope.next_page)
       return env['PATH_INFO'] + (query.empty? ? '' : "?#{query.to_query}")
     end
+  end
+
+  def per_in(rng)
+    return rng.end if params[:per].nil?
+    per = params[:per].to_i
+    return rng.begin if per < rng.begin
+    return rng.end if per > rng.end
+    return per
   end
 
   get '/' do
     @posts = Post.published
                  .where(permanent: false)
-                 .order(datetime: :desc).page(params[:page]).per(10)
+                 .order(datetime: :desc)
+                 .page(params[:page]).per(per_in(1..10))
     slim :index
   end
 
   get '/_list' do
+    if (cat_name = params[:category])
+      @category = Category.find_by!(name: cat_name)
+    else
+      @category = nil
+    end
+
     @posts = Post.published
+                 .with_category(@category)
                  .where(permanent: false)
-                 .order(datetime: :desc).page(params[:page]).per(100)
+                 .order(datetime: :desc)
+                 .page(params[:page]).per(per_in(1..100))
     @articles = Post.published
+                    .with_category(@category)
                     .where(permanent: true)
                     .order(updated_at: :desc)
     slim :list
