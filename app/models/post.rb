@@ -15,6 +15,9 @@ class Post < ActiveRecord::Base
       all
     end
   }
+  scope :without_category, ->(cat){
+    where.not(category: cat).or(Post.where('category_id IS NULL'))
+  }
 
   def permanent?
     permanent

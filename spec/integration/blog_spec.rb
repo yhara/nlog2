@@ -14,6 +14,7 @@ describe 'NLog2', type: :feature do
     }
     @valid_posted = @valid_params.merge(published_at: Time.now)
     @category1 = Category.find_or_create_by!(name: "Category1")
+    @cat_diary = Category.find_or_create_by!(name: "Diary")
   end
 
   before :each do
@@ -96,6 +97,17 @@ describe 'NLog2', type: :feature do
                                        title: "FUTURE POST"))
       visit '/_feed.xml'
       expect(page).not_to have_content("FUTURE POST")
+    end
+
+    context 'when ?nodiary=1' do
+      it 'should exclude diary posts' do
+        Post.create!(@valid_posted.merge(title: "POST1"))
+        Post.create!(@valid_posted.merge(title: "POST2", category: @cat_diary))
+        visit '/_feed.xml?nodiary=1'
+        # Should include a post without category
+        expect(page).to have_content("POST1")
+        expect(page).not_to have_content("POST2")
+      end
     end
   end
 

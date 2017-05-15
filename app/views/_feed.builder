@@ -1,7 +1,7 @@
 xml.instruct!
 xml.feed "xmlns" => "http://www.w3.org/2005/Atom" do
   site_url = NLog2.config[:blog][:url]
-  xml.title NLog2.config[:blog][:title]
+  xml.title NLog2.config[:blog][:title] + @title_suffix
   if (subtitle = NLog2.config[:blog][:subtitle])
     xml.subtitle subtitle
   end

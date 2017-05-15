@@ -89,9 +89,20 @@ class NLog2 < Sinatra::Base
   end
 
   get '/_feed.xml' do
-    @feed_posts = Post.published
-                      .where(permanent: false)
-                      .order(datetime: :desc).limit(10)
+    if params[:nodiary] == "1"
+      # Note: issues 404 if no such category
+      cat = Category.find_by!(name: "Diary")
+      @feed_posts = Post.published
+                        .where(permanent: false)
+                        .without_category(cat)
+                        .order(datetime: :desc).limit(10)
+      @title_suffix = " (without diary)"
+    else
+      @feed_posts = Post.published
+                        .where(permanent: false)
+                        .order(datetime: :desc).limit(10)
+      @title_suffix = ""
+    end
     builder :_feed
   end
 end
