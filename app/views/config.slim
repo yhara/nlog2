@@ -1,0 +1,36 @@
+- if @flash[:notice]
+  .flash.notice = @flash[:notice]
+- if @flash[:error]
+  .flash.error = @flash[:error]
+
+h2 Categories
+
+table.categories
+  tr
+    th Name
+    th Count
+    th Operation
+
+  tr
+    td= Category::NONE_TEXT
+    td= Post.uncategorized.count
+    td
+
+  - Category.list.each do |cat|
+    tr
+      td= cat.name
+      td= cat.posts.count
+      td
+        form.update-category action="/_categories/#{cat.id}" method="POST"
+          input type="hidden" name="_method" value="PUT"
+          input type="text" name="name" value=(cat.name)
+          input type="submit" value="rename(no confirm)" disabled="disabled"
+        form.delete-category action="/_categories/#{cat.id}" method="POST"
+          input type="hidden" name="_method" value="DELETE"
+          input type="submit" value="delete(no confirm)" disabled="disabled"
+
+form.create-category action="/_categories/" method="POST"
+  input type="text" name="name"
+  input type="submit" value="create"
+
+

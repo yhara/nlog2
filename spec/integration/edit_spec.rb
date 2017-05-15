@@ -1,14 +1,7 @@
 require 'spec_helper'
 
-describe 'NLog2', type: :feature do
-  def app
-    @app ||= NLog2
-  end
-
-  def login(username='jhon', password='passw0rd')
-    encoded_login = ["#{username}:#{password}"].pack('m*')
-    page.driver.header 'Authorization', "Basic #{encoded_login}"
-  end
+describe 'NLog2 edit', type: :feature do
+  include NLog2::IntegrationTest
 
   def fill_editor(params)
     check "permanent" if params[:permanent]
@@ -16,16 +9,20 @@ describe 'NLog2', type: :feature do
     fill_in "slug", with: params[:slug]
     fill_in "body", with: params[:body]
     fill_in "datetime", with: params[:datetime]
+    select params[:category].name, from: "category"
   end
 
   before :all do
     Capybara.app = app
+    Category.delete_all
+    @category1 = Category.create!(name: "Category1")
     @valid_params = {
       permanent: false,
       title: "TITLE",
       slug: "SLUG",
       body: "BODY",
       datetime: Time.now.to_s,
+      category: @category1,
     }
     @valid_posted = @valid_params.merge(published_at: Time.now)
   end
@@ -33,75 +30,6 @@ describe 'NLog2', type: :feature do
   before :each do
     Post.delete_all
     @now = Time.now.utc
-  end
-
-  describe '/' do
-    it 'should show recent posts' do
-      Post.create!(@valid_posted)
-      visit '/'
-      expect(page).to have_content("BODY")
-    end
-  end
-
-  describe '/_list' do
-    it 'should show the list of recent posts' do
-      Post.create!(@valid_posted)
-      visit '/'
-      expect(page).to have_content("TITLE")
-    end
-
-    it 'should not show future post' do
-      Post.create!(@valid_posted.merge(datetime: Time.now + 3600,
-                                       title: "FUTURE POST"))
-      visit '/'
-      expect(page).not_to have_content("FUTURE POST")
-    end
-  end
-
-  describe '/yyyy/dd/mm/xx' do
-    it 'should show post matching slug' do
-      Post.create!(@valid_posted.merge(
-        slug: "this-is-slug",
-        body: "this is body",
-        datetime: Time.utc(1234, 12, 12),
-      ))
-      visit '/1234/12/12/this-is-slug'
-      expect(page).to have_content("this is body")
-    end
-
-    it 'should show post matching id' do
-      post = Post.create!(@valid_posted.merge(
-        slug: nil,
-        datetime: Time.utc(1234, 12, 12),
-        body: "this is body",
-      ))
-      visit "/1234/12/12/#{post.id}"
-      expect(page).to have_content("this is body")
-    end
-
-    it 'should not show future post' do
-      Post.create!(@valid_posted.merge(
-        slug: "future-post",
-        datetime: Time.utc(9999, 12, 12)))
-      visit '/9999/12/12/future-post'
-      expect(page.status_code).to eq(404)
-    end
-  end
-
-  describe '/_feed.xml' do
-    it 'should return xml' do
-      Post.create!(@valid_posted)
-      visit '/_feed.xml'
-      expect(page.body).to start_with("<?xml")
-      expect(page).to have_content(@valid_params[:body])
-    end
-
-    it 'should not include future post' do
-      Post.create!(@valid_posted.merge(datetime: Time.now + 3600,
-                                       title: "FUTURE POST"))
-      visit '/_feed.xml'
-      expect(page).not_to have_content("FUTURE POST")
-    end
   end
 
   describe '/_edit (no trailing slash)' do
@@ -166,6 +94,7 @@ describe 'NLog2', type: :feature do
       expect(new_post.slug).to eq("SLUG")
       expect(new_post.body).to eq("BODY")
       expect(new_post.published_at).to eq(@now)
+      expect(new_post.category).to eq(@category1)
       expect(page.current_path).to(
         end_with(@now.in_time_zone.strftime("/%Y/%m/%d/SLUG")))
     end
@@ -176,7 +105,8 @@ describe 'NLog2', type: :feature do
       login
       visit "/_edit/#{existing.id}"
       fill_editor title: "TITLE2", slug: "SLUG2", body: "BODY2",
-                  datetime: "1234-12-12 12:12:12", permanent: false
+                  datetime: "1234-12-12 12:12:12", permanent: false,
+                  category: @category1
       click_button "Save"
 
       updated = Post.find_by!(id: existing.id)
@@ -228,24 +158,7 @@ describe 'NLog2', type: :feature do
     end
   end
 
-  describe 'permanent pages' do
-    it 'should be accessible without date' do
-      Post.create!(@valid_posted.merge(permanent: true))
-      visit "/SLUG"
-      expect(page).to have_content("BODY")
-    end
-  end
-
   context 'when timezone is set' do
-    describe 'post url' do
-      it 'should have a date in that timezone' do
-        post = Post.create!(@valid_posted.merge(
-          datetime: '2016-10-07 23:00:00 UTC', slug: 'tz-test'))
-        visit '/2016/10/08/tz-test'
-        expect(page).to have_content("BODY")
-      end
-    end
-
     describe 'editor' do
       it 'should parse datetime in that timezone' do
         login

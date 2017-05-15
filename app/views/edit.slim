@@ -1,3 +1,7 @@
+.config-button
+  a href="/_config"
+    | Config
+
 - if @flash[:notice]
   .flash.notice = @flash[:notice]
 - if @flash[:error]
@@ -34,6 +38,12 @@ form action="/_edit" method="POST"
   div
     ' Slug
     input type="text" name="slug" size=40 value=(@post.slug)
+  div
+    ' Category
+    select name="category"
+      - Category.list.each do |cat|
+        option value=(cat.id) 
+          = cat.name
   div
     textarea name="body" rows=20 cols=100
       = @post.body

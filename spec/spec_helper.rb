@@ -18,3 +18,16 @@ RSpec.configure do |config|
     #DatabaseRewinder.clean
   end
 end
+
+class NLog2
+  module IntegrationTest
+    def app
+      @app ||= NLog2
+    end
+
+    def login(username='jhon', password='passw0rd')
+      encoded_login = ["#{username}:#{password}"].pack('m*')
+      page.driver.header 'Authorization', "Basic #{encoded_login}"
+    end
+  end
+end

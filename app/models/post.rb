@@ -1,10 +1,23 @@
 require 'active_record'
 
 class Post < ActiveRecord::Base
+  belongs_to :category
+
   validates_presence_of :body, :title, :datetime, :published_at
 
   scope :published, ->{ where('datetime <= ?', Time.now) }
   scope :future, ->{ where('datetime > ?', Time.now) }
+  scope :uncategorized, ->{ where('category_id IS NULL') }
+  scope :with_category, ->(cat){
+    if cat
+      where(category: cat)
+    else
+      all
+    end
+  }
+  scope :without_category, ->(cat){
+    where.not(category: cat).or(Post.where('category_id IS NULL'))
+  }
 
   def permanent?
     permanent
