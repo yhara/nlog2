@@ -11,7 +11,6 @@ require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
 require 'kaminari'
-require 'kaminari/activerecord'
 # Database
 require 'sinatra/activerecord'
 require_relative 'models/post.rb'
