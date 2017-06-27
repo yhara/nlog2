@@ -44,7 +44,7 @@ class Post < ActiveRecord::Base
   end
 
   def path_to_edit
-    "/_edit/#{self.id}"
+    "/_admin/edit/#{self.id}"
   end
   
   def author_date

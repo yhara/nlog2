@@ -1,7 +1,6 @@
 class NLog2 < Sinatra::Base
-  get '/_edit' do redirect '/_edit/' end
-  get '/_edit/:id?' do
-    authenticate!
+  get '/_admin/edit' do redirect '/_admin/edit/' end
+  get '/_admin/edit/:id?' do
     @flash = {}
     if (id = params[:id])
       @post = Post.find_by(id: id) or raise Sinatra::NotFound
@@ -13,8 +12,7 @@ class NLog2 < Sinatra::Base
     slim :edit
   end
 
-  post '/_edit' do
-    authenticate!
+  post '/_admin/edit' do
     @flash = {}
     if (id = params[:id])
       @post = Post.find_by(id: id) or raise Sinatra::NotFound

@@ -16,8 +16,9 @@ require 'sinatra/activerecord'
 require_relative 'models/post.rb'
 require_relative 'models/category.rb'
 require_relative 'controllers/blog.rb'
-require_relative 'controllers/edit.rb'
-require_relative 'controllers/config.rb'
+require_relative 'controllers/admin.rb'
+require_relative 'controllers/admin/edit.rb'
+require_relative 'controllers/admin/config.rb'
 
 class NLog2 < Sinatra::Base
   class NotFound < StandardError; end
@@ -53,22 +54,6 @@ class NLog2 < Sinatra::Base
 
     # Seems to be needed when running on Passenger
     Time.zone = NLog2.config[:timezone]
-  end
-
-  def authenticate!
-    return if authorized?
-    headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
-    halt 401, "Not authorized\n"
-  end
-
-  def authorized?
-    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-    return false unless (@auth.provided? and @auth.basic? and @auth.credentials)
-    username, password = *@auth.credentials
-    correct_pass = BCrypt::Password.new(NLog2.config[:auth][:password_hash])
-
-    return (username == NLog2.config[:auth][:username]) &&
-           correct_pass.is_password?(password)
   end
 
   error ActiveRecord::RecordNotFound do

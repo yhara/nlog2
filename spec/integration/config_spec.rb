@@ -7,10 +7,10 @@ describe 'NLog2 config', type: :feature do
     Capybara.app = app
   end
 
-  describe '/_config/' do
-    it 'should redirect to /_config' do
-      visit '/_config/'
-      expect(page.current_path).to end_with("/_config")
+  describe '/_admin/config/' do
+    it 'should redirect to /_admin/config' do
+      visit '/_admin/config/'
+      expect(page.current_path).to end_with("/_admin/config")
     end
   end
 
@@ -19,12 +19,12 @@ describe 'NLog2 config', type: :feature do
       Category.delete_all
     end
 
-    describe '/_config' do
+    describe '/_admin/config' do
       it 'should show list of categories' do
         Category.create!(name: "Category1")
 
         login
-        visit '/_config'
+        visit '/_admin/config'
         expect(page).to have_content("Category1")
       end
     end
@@ -32,7 +32,7 @@ describe 'NLog2 config', type: :feature do
     describe 'add button' do
       it 'should create new category' do
         login
-        visit '/_config'
+        visit '/_admin/config'
         find("form.create-category input[name=name]").set("Category1")
         click_button "create"
 
@@ -44,7 +44,7 @@ describe 'NLog2 config', type: :feature do
       it 'should update that category' do
         Category.create!(name: "Category1")
         login
-        visit '/_config'
+        visit '/_admin/config'
         find("form.update-category input[name=name]").set("Category1")
         click_button "delete(no confirm)", disabled: true
 
@@ -56,7 +56,7 @@ describe 'NLog2 config', type: :feature do
       it 'should delete that category' do
         Category.create!(name: "Category1")
         login
-        visit '/_config'
+        visit '/_admin/config'
         click_button "delete(no confirm)", disabled: true
 
         expect(Category.find_by(name: "Category1")).to be_nil

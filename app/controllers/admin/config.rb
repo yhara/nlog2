@@ -1,43 +1,39 @@
 class NLog2 < Sinatra::Base
-  get '/_config/' do redirect '/_config' end
-  get '/_config' do
-    authenticate!
+  get '/_admin/config/' do redirect '/_admin/config' end
+  get '/_admin/config' do
     @flash = {}
 
     slim :config
   end
 
-  post '/_categories/' do
-    authenticate!
+  post '/_admin/categories/' do
     @flash = {}
 
     category = Category.new(name: @params[:name])
     if category.save
-      redirect '/_config'
+      redirect '/_admin/config'
     else
       @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
       slim :config
     end
   end
 
-  put '/_categories/:id' do
-    authenticate!
+  put '/_admin/categories/:id' do
     category = Category.find_by!(id: params[:id])
     category.name = params[:name]
 
     if category.save
-      redirect '/_config'
+      redirect '/_admin/config'
     else
       @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
       slim :config
     end
   end
 
-  delete '/_categories/:id' do
-    authenticate!
+  delete '/_admin/categories/:id' do
     category = Category.find_by!(id: params[:id])
     category.destroy
 
-    redirect '/_config'
+    redirect '/_admin/config'
   end
 end

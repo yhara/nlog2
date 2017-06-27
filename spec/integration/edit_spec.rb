@@ -32,36 +32,36 @@ describe 'NLog2 edit', type: :feature do
     @now = Time.now.utc
   end
 
-  describe '/_edit (no trailing slash)' do
-    it 'should redirect to /_edit/' do
-      visit '/_edit'
-      expect(page.current_path).to end_with("/_edit/")
+  describe '/_admin/edit (no trailing slash)' do
+    it 'should redirect to /_admin/edit/' do
+      visit '/_admin/edit'
+      expect(page.current_path).to end_with("/_admin/edit/")
     end
   end
 
-  describe '/_edit/' do
+  describe '/_admin/edit/' do
     it 'should show editor' do
       login
-      visit '/_edit/'
+      visit '/_admin/edit/'
       expect(page).to have_selector("form")
     end
   end
 
-  describe '/_edit/:id' do
+  describe '/_admin/edit/:id' do
     it 'should show editor for the post' do
       post = Post.create!(@valid_posted)
       login
-      visit "/_edit/#{post.id}"
+      visit "/_admin/edit/#{post.id}"
       expect(page).to have_selector("input[name='title'][value='#{@valid_posted[:title]}']")
     end
   end
 
-  describe '/_edit (Preview)' do
+  describe '/_admin/edit (Preview)' do
     it 'should not create a record' do
       count = Post.count
 
       login
-      visit '/_edit/'
+      visit '/_admin/edit/'
       fill_editor @valid_params
       click_button "Preview"
 
@@ -70,7 +70,7 @@ describe 'NLog2 edit', type: :feature do
 
     it 'should not raise error when failed to parse datetime' do
       login
-      visit '/_edit/'
+      visit '/_admin/edit/'
       expect {
         fill_editor @valid_params.merge(datetime: "asdf")
         click_button "Preview"
@@ -78,12 +78,12 @@ describe 'NLog2 edit', type: :feature do
     end
   end
 
-  describe '/_edit (Save)' do
+  describe '/_admin/edit (Save)' do
     it 'creates a public post' do
       count = Post.count
       Timecop.freeze(@now) do
         login
-        visit '/_edit/'
+        visit '/_admin/edit/'
         fill_editor @valid_params
         click_button "Save"
       end
@@ -103,7 +103,7 @@ describe 'NLog2 edit', type: :feature do
       existing = Post.create!(@valid_posted)
 
       login
-      visit "/_edit/#{existing.id}"
+      visit "/_admin/edit/#{existing.id}"
       fill_editor title: "TITLE2", slug: "SLUG2", body: "BODY2",
                   datetime: "1234-12-12 12:12:12", permanent: false,
                   category: @category1
@@ -118,7 +118,7 @@ describe 'NLog2 edit', type: :feature do
 
     it 'should redirect to url without date when post is permanent' do
       login
-      visit '/_edit'
+      visit '/_admin/edit'
       fill_editor @valid_params.merge(permanent: true)
       click_button "Save"
 
@@ -129,17 +129,17 @@ describe 'NLog2 edit', type: :feature do
     context 'when saving future post' do
       it 'should show edit page again' do
         login
-        visit '/_edit'
+        visit '/_admin/edit'
         fill_editor @valid_params.merge(datetime: (Time.now + 3600).to_s)
         click_button "Save"
 
-        expect(page.current_path).to eq("/_edit")
+        expect(page.current_path).to eq("/_admin/edit")
       end
     end
 
     it 'should not raise error when failed to parse datetime' do
       login
-      visit '/_edit'
+      visit '/_admin/edit'
       expect {
         fill_editor @valid_params.merge(datetime: "asdf")
         click_button "Preview"
@@ -150,7 +150,7 @@ describe 'NLog2 edit', type: :feature do
       count = Post.count
 
       login
-      visit '/_edit'
+      visit '/_admin/edit'
       fill_editor @valid_params.merge(body: "")
       click_button "Save"
 
@@ -162,7 +162,7 @@ describe 'NLog2 edit', type: :feature do
     describe 'editor' do
       it 'should parse datetime in that timezone' do
         login
-        visit '/_edit'
+        visit '/_admin/edit'
         fill_editor @valid_params.merge(datetime: '1234-12-12 00:00:00')
         click_button "Save"
                    

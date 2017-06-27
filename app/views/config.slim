@@ -21,15 +21,15 @@ table.categories
       td= cat.name
       td= cat.posts.count
       td
-        form.update-category action="/_categories/#{cat.id}" method="POST"
+        form.update-category action="/_admin/categories/#{cat.id}" method="POST"
           input type="hidden" name="_method" value="PUT"
           input type="text" name="name" value=(cat.name)
           input type="submit" value="rename(no confirm)" disabled="disabled"
-        form.delete-category action="/_categories/#{cat.id}" method="POST"
+        form.delete-category action="/_admin/categories/#{cat.id}" method="POST"
           input type="hidden" name="_method" value="DELETE"
           input type="submit" value="delete(no confirm)" disabled="disabled"
 
-form.create-category action="/_categories/" method="POST"
+form.create-category action="/_admin/categories/" method="POST"
   input type="text" name="name"
   input type="submit" value="create"
 
