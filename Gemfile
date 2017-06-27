@@ -15,7 +15,7 @@ gem 'kaminari-sinatra'
 gem 'rouge'
 
 # Database 
-gem 'sinatra-activerecord', git: 'https://github.com/yhara/sinatra-activerecord', branch: 'sinatra2'
+gem 'sinatra-activerecord'
 gem 'sqlite3'
 
 # Test
