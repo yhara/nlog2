@@ -7,10 +7,11 @@ require 'active_support/core_ext/object/to_query'
 # View
 require 'slim'
 require 'sass'
-require 'kaminari/sinatra'
 require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
+require 'kaminari'
+require 'kaminari/activerecord'
 # Database
 require 'sinatra/activerecord'
 require_relative 'models/post.rb'
