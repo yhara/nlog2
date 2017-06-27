@@ -2,8 +2,8 @@ source 'http://rubygems.org'
 
 gem 'rake'
 
-gem 'sinatra', '2.0.0.beta2'
-gem 'sinatra-contrib', '2.0.0.beta2'
+gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'bcrypt'
 
 # View
