@@ -1,3 +1,8 @@
+## v0.3.0 (2017-06-27)
+
+- Changed admin urls (eg. /_edit -> /_admin/edit)
+- Update dependencies
+
 ## v0.2.0 (2017-05-16)
 
 - new: category for posts
