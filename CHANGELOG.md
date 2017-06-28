@@ -1,3 +1,7 @@
+## v0.3.1 (2017-06-29)
+
+- fix: Category is reset by Preview button
+
 ## v0.3.0 (2017-06-27)
 
 - Changed admin urls (eg. /_edit -> /_admin/edit)
