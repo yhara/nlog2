@@ -42,7 +42,7 @@ form action="/_admin/edit" method="POST"
     ' Category
     select name="category"
       - Category.list.each do |cat|
-        option value=(cat.id) 
+        option value=(cat.id) selected=(cat == @post.category ? 'selected' : nil)
           = cat.name
   div
     textarea name="body" rows=20 cols=100

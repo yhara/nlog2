@@ -16,6 +16,7 @@ describe 'NLog2 edit', type: :feature do
     Capybara.app = app
     Category.delete_all
     @category1 = Category.create!(name: "Category1")
+    @category2 = Category.create!(name: "Category2")
     @valid_params = {
       permanent: false,
       title: "TITLE",
@@ -57,6 +58,18 @@ describe 'NLog2 edit', type: :feature do
   end
 
   describe '/_admin/edit (Preview)' do
+    it 'should set current value to the form' do
+      count = Post.count
+
+      login
+      visit '/_admin/edit/'
+      fill_editor @valid_params.merge(category: @category2)
+      click_button "Preview"
+
+      expect(page).to have_content(@valid_params[:body])
+      expect(find_field("category").value).to eq(@category2.id.to_s)
+    end
+
     it 'should not create a record' do
       count = Post.count
 
