@@ -34,6 +34,16 @@ describe 'NLog2', type: :feature do
       visit '/'
       expect(page).not_to have_content("FUTURE POST")
     end
+
+    context 'when category is given' do
+      it 'should show the posts in the category' do
+        Post.create!(@valid_posted.merge(title: "POST1", category: @category1))
+        Post.create!(@valid_posted.merge(title: "POST2"))
+        visit "/?category=#{@category1.name}"
+        expect(page).to have_content("POST1")
+        expect(page).not_to have_content("POST2")
+      end
+    end
   end
 
   describe '/_list' do

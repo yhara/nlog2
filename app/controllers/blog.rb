@@ -30,7 +30,14 @@ class NLog2 < Sinatra::Base
   end
 
   get '/' do
+    if (cat_name = params[:category])
+      @category = Category.find_by!(name: cat_name)
+    else
+      @category = nil
+    end
+
     @posts = Post.published
+                 .with_category(@category)
                  .where(permanent: false)
                  .order(datetime: :desc)
                  .page(params[:page]).per(per_in(1..10))
