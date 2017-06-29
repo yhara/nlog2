@@ -1,3 +1,8 @@
+## v0.4.0 (2017-06-29)
+
+- new: Shorten long posts in the top page
+- fix: /?category=XXX did not work
+
 ## v0.3.1 (2017-06-29)
 
 - fix: Category is reset by Preview button
