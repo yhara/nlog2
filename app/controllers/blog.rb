@@ -37,7 +37,7 @@ class NLog2 < Sinatra::Base
     end
 
     @posts = Post.published
-                 .with_category(@category)
+                 .with_category_if(@category)
                  .where(permanent: false)
                  .order(datetime: :desc)
                  .page(params[:page]).per(per_in(1..10))
@@ -52,12 +52,12 @@ class NLog2 < Sinatra::Base
     end
 
     @posts = Post.published
-                 .with_category(@category)
+                 .with_category_if(@category)
                  .where(permanent: false)
                  .order(datetime: :desc)
                  .page(params[:page]).per(per_in(1..100))
     @articles = Post.published
-                    .with_category(@category)
+                    .with_category_if(@category)
                     .where(permanent: true)
                     .order(updated_at: :desc)
     slim :list

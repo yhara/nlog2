@@ -8,7 +8,7 @@ class Post < ActiveRecord::Base
   scope :published, ->{ where('datetime <= ?', Time.now) }
   scope :future, ->{ where('datetime > ?', Time.now) }
   scope :uncategorized, ->{ where('category_id IS NULL') }
-  scope :with_category, ->(cat){
+  scope :with_category_if, ->(cat){
     if cat
       where(category: cat)
     else
