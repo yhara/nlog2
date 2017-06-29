@@ -14,15 +14,25 @@
     a href="/?category=#{Rack::Utils.escape cat.name}"
       = cat.name
 
-  div
-    == post.rendered_body
+  - if short && post.short_body
+    // Short version
+    div
+      == post.short_body
+    div
+      a href=post.path_to_show
+        | (more...)
 
-  .social-buttons
-    .twitter
-      == post.twitter_button
-    '
-    .facebook
-      == post.facebook_button
-    '
-    .hatebu
-      == post.hatena_bookmark_button
+  - else
+    // Full version
+    div
+      == post.rendered_body
+
+    .social-buttons
+      .twitter
+        == post.twitter_button
+      '
+      .facebook
+        == post.facebook_button
+      '
+      .hatebu
+        == post.hatena_bookmark_button

@@ -1,5 +1,5 @@
 - @posts.each do |post|
-  == slim :_post_full, locals: {post: post}
+  == slim :_post_full, locals: {post: post, short: true}
 
 div
   - unless @posts.first_page? 

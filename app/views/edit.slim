@@ -21,7 +21,7 @@
 
 - if params[:submit_by] == "Preview"
   .preview
-    == slim :_post_full, locals: {post: @post}
+    == slim :_post_full, locals: {post: @post, short: false}
 
 form action="/_admin/edit" method="POST"
   - if @post.id

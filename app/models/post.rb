@@ -64,19 +64,25 @@ class Post < ActiveRecord::Base
     return self.id.to_s
   end
 
-  class HtmlWithRouge < Redcarpet::Render::HTML
-    include Rouge::Plugins::Redcarpet
-  end
   def rendered_body
-    markdown = Redcarpet::Markdown.new(HtmlWithRouge,
-      no_intra_emphasis: true,
-      tables: true,
-      fenced_code_blocks: true,
-      autolink: true,
-      strikethrough: true,
-      footnotes: true,
-    )
-    markdown.render(self.body)
+    render_markdown(self.body)
+  end
+
+  # Return shortened version of HTML
+  # Return nil if the body is already short enough
+  SHORTEN_TO = 10
+  SHORTEN_MORE_THAN = 15
+  def short_body
+    lines = self.body.strip.lines
+    if lines.count <= SHORTEN_MORE_THAN
+      nil
+    else
+      lines = lines.first(SHORTEN_TO)
+      if lines.last.start_with?("#")
+        lines.pop
+      end
+      render_markdown(lines.join)
+    end
   end
 
   # Social buttons
@@ -119,5 +125,22 @@ class Post < ActiveRecord::Base
       "</a>"
     ].join(" ")
   end
-end
 
+  private
+  
+  class HtmlWithRouge < Redcarpet::Render::HTML
+    include Rouge::Plugins::Redcarpet
+  end
+  def render_markdown(str)
+    markdown = Redcarpet::Markdown.new(HtmlWithRouge,
+      no_intra_emphasis: true,
+      tables: true,
+      fenced_code_blocks: true,
+      autolink: true,
+      strikethrough: true,
+      footnotes: true,
+    )
+    return markdown.render(str)
+  end
+
+end
