@@ -75,6 +75,7 @@ class NLog2 < Sinatra::Base
 
     @post = cond.where(datetime: range).first or raise Sinatra::NotFound
     @title = @post.title
+    @more_posts = @post.more_posts
     slim :show
   end
 
@@ -83,6 +84,7 @@ class NLog2 < Sinatra::Base
     @post = Post.published.where(permanent: true, slug: name).first
     raise Sinatra::NotFound unless @post
     @title = @post.title
+    @more_posts = @post.more_posts
     slim :show
   end
 

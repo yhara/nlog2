@@ -18,6 +18,23 @@ class Post < ActiveRecord::Base
   scope :without_category, ->(cat){
     where.not(category: cat).or(Post.where('category_id IS NULL'))
   }
+  scope :is_not, ->(post){
+    where.not(id: post.id)
+  }
+
+  def more_posts
+    ret = Post.published
+              .is_not(self)
+              .order(datetime: :desc).limit(3).to_a
+    if ret.any?
+      ret += Post.published
+                 .is_not(self)
+                 .where(category: self.category)
+                 .where('datetime < ?', ret.last.datetime)
+                 .order(datetime: :desc).limit(3).to_a
+    end
+    return ret
+  end
 
   def permanent?
     permanent
