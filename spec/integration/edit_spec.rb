@@ -35,6 +35,7 @@ describe 'NLog2 edit', type: :feature do
 
   describe '/_admin/edit (no trailing slash)' do
     it 'should redirect to /_admin/edit/' do
+      login
       visit '/_admin/edit'
       expect(page.current_path).to end_with("/_admin/edit/")
     end
@@ -45,6 +46,11 @@ describe 'NLog2 edit', type: :feature do
       login
       visit '/_admin/edit/'
       expect(page).to have_selector("form")
+    end
+
+    it 'should not show editor without login' do
+      visit '/_admin/edit/'
+      expect(page).not_to have_selector("form")
     end
   end
 

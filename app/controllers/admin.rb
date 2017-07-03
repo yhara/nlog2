@@ -15,7 +15,7 @@ class NLog2 < Sinatra::Base
            correct_pass.is_password?(password)
   end
 
-  before '/_admin' do
+  before '/_admin/*' do
     authenticate!
   end
 end

@@ -9,6 +9,7 @@ describe 'NLog2 config', type: :feature do
 
   describe '/_admin/config/' do
     it 'should redirect to /_admin/config' do
+      login
       visit '/_admin/config/'
       expect(page.current_path).to end_with("/_admin/config")
     end
