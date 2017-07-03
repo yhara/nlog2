@@ -1,3 +1,9 @@
+## v0.5.0 (2017-07-03)
+
+Imporant fix: authentication is broken since v0.3.0
+
+- new: Show newest/related posts
+
 ## v0.4.0 (2017-06-29)
 
 - new: Shorten long posts in the top page
