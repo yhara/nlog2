@@ -87,7 +87,7 @@ describe 'NLog2 edit', type: :feature do
       expect(Post.count).to eq(count)
     end
 
-    it 'should not raise error when failed to parse datetime' do
+    it 'should not raise an exception when failed to parse datetime' do
       login
       visit '/_admin/edit/'
       expect {
@@ -135,6 +135,17 @@ describe 'NLog2 edit', type: :feature do
       expect(page.current_path).to(end_with("/1234/12/12/SLUG2"))
     end
 
+    it 'should set current time if blank' do
+      Timecop.freeze(@now) do
+        login
+        visit '/_admin/edit/'
+        fill_editor @valid_params.merge(datetime: "")
+        click_button "Save"
+      end
+      new_post = Post.order("id desc").first
+      expect(new_post.datetime).to eq(@now)
+    end
+
     it 'should redirect to url without date when post is permanent' do
       login
       visit '/_admin/edit'
@@ -156,7 +167,7 @@ describe 'NLog2 edit', type: :feature do
       end
     end
 
-    it 'should not raise error when failed to parse datetime' do
+    it 'should not raise an exception when failed to parse datetime' do
       login
       visit '/_admin/edit'
       expect {

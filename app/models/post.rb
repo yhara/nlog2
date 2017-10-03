@@ -56,7 +56,11 @@ class Post < ActiveRecord::Base
     if permanent?
       "/#{slug_or_id}"
     else
-      self.author_datetime.strftime("/%Y/%m/%d/#{slug_or_id}")
+      if (d = self.author_datetime)
+        d.strftime("/%Y/%m/%d/#{slug_or_id}")
+      else
+        "(TBA)"
+      end
     end
   end
 
@@ -65,11 +69,11 @@ class Post < ActiveRecord::Base
   end
   
   def author_date
-    author_datetime.to_date
+    author_datetime&.to_date
   end
 
   def author_datetime
-    self.datetime.in_time_zone
+    self.datetime&.in_time_zone
   end
 
   def author_updated_at

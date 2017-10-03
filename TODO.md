@@ -2,7 +2,6 @@
 
 Edit 
 
-- Set current time if omitted
 - Add character validation to slug (- is not usable for permanent posts)
 
 Model

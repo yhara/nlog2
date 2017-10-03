@@ -6,7 +6,6 @@ class NLog2 < Sinatra::Base
       @post = Post.find_by(id: id) or raise Sinatra::NotFound
     else
       @post = Post.new
-      @post.datetime = Time.now
     end
     @title = "Edit"
     slim :edit
@@ -24,11 +23,14 @@ class NLog2 < Sinatra::Base
     @post.title = params[:title]
     @post.slug = params[:slug]
     @post.body = params[:body]
-    if (d = Time.zone.parse(params[:datetime]) rescue nil)
-      @post.datetime = d
+    if params[:datetime].strip.empty?
+      @post.datetime = Time.now if params[:submit_by] == "Save"
     else
-      @flash[:error] = "Failed to parse date: #{params[:datetime].inspect}"
-      @post.datetime = Time.now
+      if (d = Time.zone.parse(params[:datetime]) rescue nil)
+        @post.datetime = d
+      else
+        @flash[:error] = "Failed to parse date: #{params[:datetime].inspect}"
+      end
     end
     @post.category = Category.find_by!(id: params[:category].to_i)
 
@@ -37,7 +39,7 @@ class NLog2 < Sinatra::Base
       if @post.save
         if @post.future?
           @flash[:notice] = "Scheduled `#{@post.title}' to be posted at #{@post.author_datetime}"
-          @post = Post.new; @post.datetime = Time.now
+          @post = Post.new
           slim :edit
         else
           redirect @post.path_to_show

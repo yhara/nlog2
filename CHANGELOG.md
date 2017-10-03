@@ -1,6 +1,7 @@
-## v0.5.1 
+## v0.6.0 (2017-10-03)
 
-- fix development reload paths
+- new: Set current time if omitted
+- fix: fix development reload paths
 
 ## v0.5.0 (2017-07-03)
 
