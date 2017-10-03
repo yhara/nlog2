@@ -3,6 +3,8 @@
 Edit 
 
 - Add character validation to slug (- is not usable for permanent posts)
+- When opened a form, category should be '---' or something
+  (to prevent choosing wrong category)
 
 Model
 
