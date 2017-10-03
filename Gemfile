@@ -34,4 +34,5 @@ group :development do
   gem 'capistrano-rbenv'
   gem 'capistrano-rails'
   gem 'capistrano-passenger'
+  gem 'puma'
 end
