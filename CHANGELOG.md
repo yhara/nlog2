@@ -1,3 +1,7 @@
+## v0.5.1 
+
+- fix development reload paths
+
 ## v0.5.0 (2017-07-03)
 
 Imporant fix: authentication is broken since v0.3.0

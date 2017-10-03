@@ -33,7 +33,7 @@ class NLog2 < Sinatra::Base
   register Sinatra::ActiveRecordExtension
   configure(:development) do
     register Sinatra::Reloader
-    also_reload 'app/**/*.rb'
+    also_reload "#{__dir__}/**/*.rb"
   end
 
   configure do
