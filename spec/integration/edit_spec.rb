@@ -29,7 +29,7 @@ describe 'NLog2 edit', type: :feature do
   end
 
   before :each do
-    Post.delete_all
+    Entry.delete_all
     @now = Time.now.utc
   end
 

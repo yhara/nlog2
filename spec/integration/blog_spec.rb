@@ -17,7 +17,7 @@ describe 'NLog2', type: :feature do
   end
 
   before :each do
-    Post.delete_all
+    Entry.delete_all
   end
 
   describe '/' do
