@@ -25,7 +25,7 @@ describe 'NLog2 edit', type: :feature do
       datetime: Time.now.to_s,
       category: @category1,
     }
-    @valid_posted = @valid_params.merge(published_at: Time.now)
+    @valid_posted = @valid_params.merge(published_at: Time.now).except(:permanent)
   end
 
   before :each do
@@ -146,7 +146,7 @@ describe 'NLog2 edit', type: :feature do
       expect(new_post.datetime).to eq(@now)
     end
 
-    it 'should redirect to url without date when post is permanent' do
+    it 'should redirect to url without date for an article' do
       login
       visit '/_admin/edit'
       fill_editor @valid_params.merge(permanent: true)

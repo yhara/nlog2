@@ -6,7 +6,6 @@ describe 'NLog2', type: :feature do
   before :all do
     Capybara.app = app
     @valid_params = {
-      permanent: false,
       title: "TITLE",
       slug: "SLUG",
       body: "BODY",
@@ -121,9 +120,9 @@ describe 'NLog2', type: :feature do
     end
   end
 
-  describe 'permanent pages' do
+  describe 'articles' do
     it 'should be accessible without date' do
-      Post.create!(@valid_posted.merge(permanent: true))
+      Article.create!(@valid_posted)
       visit "/SLUG"
       expect(page).to have_content("BODY")
     end

@@ -38,7 +38,6 @@ class NLog2 < Sinatra::Base
 
     @posts = Post.published
                  .with_category_if(@category)
-                 .where(permanent: false)
                  .order(datetime: :desc)
                  .page(params[:page]).per(per_in(1..10))
     slim :index
@@ -53,12 +52,10 @@ class NLog2 < Sinatra::Base
 
     @posts = Post.published
                  .with_category_if(@category)
-                 .where(permanent: false)
                  .order(datetime: :desc)
                  .page(params[:page]).per(per_in(1..100))
-    @articles = Post.published
+    @articles = Article.published
                     .with_category_if(@category)
-                    .where(permanent: true)
                     .order(updated_at: :desc)
     slim :list
   end
@@ -68,7 +65,7 @@ class NLog2 < Sinatra::Base
     d = Date.new(*date.map(&:to_i))
     range = d.in_time_zone...(d+1).in_time_zone
 
-    cond = Post.published.where(permanent: false, slug: slug_or_id)
+    cond = Post.published.where(slug: slug_or_id)
     if (id = Integer(slug_or_id) rescue nil)
       cond = cond.or(Post.where(id: id))
     end
@@ -81,7 +78,7 @@ class NLog2 < Sinatra::Base
 
   # Permanent articles (must not start with `_')
   get %r{/([^_]\w+)} do |name|
-    @post = Post.published.where(permanent: true, slug: name).first
+    @post = Article.published.where(slug: name).first
     raise Sinatra::NotFound unless @post
     @title = @post.title
     @more_posts = @post.more_posts
@@ -102,13 +99,11 @@ class NLog2 < Sinatra::Base
       # Note: issues 404 if no such category
       cat = Category.find_by!(name: "Diary")
       @feed_posts = Post.published
-                        .where(permanent: false)
                         .without_category(cat)
                         .order(datetime: :desc).limit(10)
       @title_suffix = " (without diary)"
     else
       @feed_posts = Post.published
-                        .where(permanent: false)
                         .order(datetime: :desc).limit(10)
       @title_suffix = ""
     end

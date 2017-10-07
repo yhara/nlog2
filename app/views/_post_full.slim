@@ -6,7 +6,7 @@
     a href=post.path_to_show
       = post.title
 
-  - unless post.permanent?
+  - if post.is_a?(Post)
     div
       = post.author_date
 
