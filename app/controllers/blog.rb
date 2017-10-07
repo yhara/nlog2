@@ -78,8 +78,7 @@ class NLog2 < Sinatra::Base
 
   # Permanent articles (must not start with `_')
   get %r{/([^_]\w+)} do |name|
-    @post = Article.published.where(slug: name).first
-    raise Sinatra::NotFound unless @post
+    @post = Article.published.find_by!(slug: name)
     @title = @post.title
     @more_posts = @post.more_posts
     slim :show
