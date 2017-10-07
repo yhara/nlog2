@@ -55,8 +55,8 @@ class NLog2 < Sinatra::Base
                  .order(datetime: :desc)
                  .page(params[:page]).per(per_in(1..100))
     @articles = Article.published
-                    .with_category_if(@category)
-                    .order(updated_at: :desc)
+                       .with_category_if(@category)
+                       .order(updated_at: :desc)
     slim :list
   end
 
