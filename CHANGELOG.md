@@ -1,3 +1,7 @@
+## v1.0.0 (2017-10-08)
+
+Breaking change: changed DB schema.
+
 ## v0.6.0 (2017-10-03)
 
 - new: Set current time if omitted
