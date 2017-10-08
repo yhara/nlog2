@@ -11,4 +11,3 @@ Model
 
 - Change updated_at to last_update
   - Allow 'subtle change' (do not change last_update and not shown in the feed)
-- Split Post and Article (to add uniqueness validation to slug)
