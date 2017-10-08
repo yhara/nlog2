@@ -14,12 +14,15 @@ class NLog2 < Sinatra::Base
   post '/_admin/edit' do
     @flash = {}
     if (id = params[:id])
-      @post = Post.find_by(id: id) or raise Sinatra::NotFound
+      @post = Entry.find_by(id: id) or raise Sinatra::NotFound
     else
-      @post = Post.new
+      if params[:permanent] == "yes"
+        @post = Article.new
+      else
+        @post = Post.new
+      end
     end
 
-    @post.permanent = (params[:permanent] == "yes")
     @post.title = params[:title]
     @post.slug = params[:slug]
     @post.body = params[:body]

@@ -1,7 +1,7 @@
 ul
   - posts.each do |post|
     li
-      span = (post.permanent? ? post.author_updated_at.to_date : post.author_date)
+      span = (post.is_a?(Article) ? post.author_updated_at.to_date : post.author_date)
       '
       - if (cat = post.category)
         | [
