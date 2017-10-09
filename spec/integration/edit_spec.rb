@@ -55,10 +55,17 @@ describe 'NLog2 edit', type: :feature do
   end
 
   describe '/_admin/edit/:id' do
-    it 'should show editor for the post' do
-      post = Post.create!(@valid_posted)
+    it 'should show editor for a post' do
+      entry = Post.create!(@valid_posted)
       login
-      visit "/_admin/edit/#{post.id}"
+      visit "/_admin/edit/#{entry.id}"
+      expect(page).to have_selector("input[name='title'][value='#{@valid_posted[:title]}']")
+    end
+
+    it 'should show editor for an article' do
+      entry = Article.create!(@valid_posted)
+      login
+      visit "/_admin/edit/#{entry.id}"
       expect(page).to have_selector("input[name='title'][value='#{@valid_posted[:title]}']")
     end
   end

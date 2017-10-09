@@ -3,7 +3,7 @@ class NLog2 < Sinatra::Base
   get '/_admin/edit/:id?' do
     @flash = {}
     if (id = params[:id])
-      @post = Post.find_by(id: id) or raise Sinatra::NotFound
+      @post = Entry.find_by(id: id) or raise Sinatra::NotFound
     else
       @post = Post.new
     end

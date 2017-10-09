@@ -1,3 +1,7 @@
+## v1.0.1 (2017-10-09)
+
+- fix: could not edit an article
+
 ## v1.0.0 (2017-10-08)
 
 Breaking change: changed DB schema.

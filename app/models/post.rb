@@ -22,10 +22,6 @@ class Post < Entry
     author_datetime&.to_date
   end
 
-  def author_datetime
-    self.datetime&.in_time_zone
-  end
-
   # Return shortened version of HTML
   # Return nil if the body is already short enough
   SHORTEN_TO = 10

@@ -51,6 +51,10 @@ class Entry < ActiveRecord::Base
     self.updated_at.in_time_zone
   end
 
+  def author_datetime
+    self.datetime&.in_time_zone
+  end
+
   def rendered_body
     render_markdown(self.body)
   end
