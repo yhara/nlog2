@@ -76,7 +76,7 @@ class NLog2 < Sinatra::Base
     slim :show
   end
 
-  # Permanent articles (must not start with `_')
+  # Articles
   get %r{/([^_]\w+)} do |name|
     @post = Article.published.find_by!(slug: name)
     @title = @post.title

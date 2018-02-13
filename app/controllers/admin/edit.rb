@@ -16,7 +16,7 @@ class NLog2 < Sinatra::Base
     if (id = params[:id])
       @post = Entry.find_by(id: id) or raise Sinatra::NotFound
     else
-      if params[:permanent] == "yes"
+      if params[:article] == "yes"
         @post = Article.new
       else
         @post = Post.new

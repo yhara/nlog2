@@ -4,7 +4,7 @@ describe 'NLog2 edit', type: :feature do
   include NLog2::IntegrationTest
 
   def fill_editor(params)
-    check "permanent" if params[:permanent]
+    check "article" if params[:article]
     fill_in "title", with: params[:title]
     fill_in "slug", with: params[:slug]
     fill_in "body", with: params[:body]
@@ -18,14 +18,14 @@ describe 'NLog2 edit', type: :feature do
     @category1 = Category.create!(name: "Category1")
     @category2 = Category.create!(name: "Category2")
     @valid_params = {
-      permanent: false,
+      article: false,
       title: "TITLE",
       slug: "SLUG",
       body: "BODY",
       datetime: Time.now.to_s,
       category: @category1,
     }
-    @valid_posted = @valid_params.merge(published_at: Time.now).except(:permanent)
+    @valid_posted = @valid_params.merge(published_at: Time.now).except(:article)
   end
 
   before :each do
@@ -131,7 +131,7 @@ describe 'NLog2 edit', type: :feature do
       login
       visit "/_admin/edit/#{existing.id}"
       fill_editor title: "TITLE2", slug: "SLUG2", body: "BODY2",
-                  datetime: "1234-12-12 12:12:12", permanent: false,
+                  datetime: "1234-12-12 12:12:12", article: false,
                   category: @category1
       click_button "Save"
 
@@ -156,7 +156,7 @@ describe 'NLog2 edit', type: :feature do
     it 'should redirect to url without date for an article' do
       login
       visit '/_admin/edit'
-      fill_editor @valid_params.merge(permanent: true)
+      fill_editor @valid_params.merge(article: true)
       click_button "Save"
 
       expect(page.current_path).not_to match(%r{/\d\d\d\d/\d\d/\d\d})
