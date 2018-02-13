@@ -5,6 +5,7 @@ Edit
 - When opened a form, category should be '---' or something
   (to prevent choosing wrong category)
 - Change "permanent" in views to "article"
+- Save draft to localstorage
 
 Model
 
