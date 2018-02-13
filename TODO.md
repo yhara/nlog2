@@ -3,6 +3,11 @@
 Edit 
 
 - Save draft to localstorage
+- 'Minor change' checkbox (do not be shown in the feed)
+
+View
+
+- Sidebar
 
 Model
 
