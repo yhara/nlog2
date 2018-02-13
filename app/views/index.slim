@@ -1,6 +1,8 @@
 - @posts.each do |post|
   == slim :_post_full, locals: {post: post, short: true}
 
+  hr
+
 div
   - unless @posts.first_page? 
     a href=(previous_page_path(@posts))
