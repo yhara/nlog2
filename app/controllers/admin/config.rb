@@ -3,7 +3,7 @@ class NLog2 < Sinatra::Base
   get '/_admin/config' do
     @flash = {}
 
-    slim :config
+    slim :'admin/config'
   end
 
   post '/_admin/categories/' do
@@ -14,7 +14,7 @@ class NLog2 < Sinatra::Base
       redirect '/_admin/config'
     else
       @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
-      slim :config
+      slim :'admin/config'
     end
   end
 
@@ -26,7 +26,7 @@ class NLog2 < Sinatra::Base
       redirect '/_admin/config'
     else
       @flash[:error] = "Failed to save record: #{category.errors.messages.inspect}"
-      slim :config
+      slim :'admin/config'
     end
   end
 
