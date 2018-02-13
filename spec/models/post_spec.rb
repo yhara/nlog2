@@ -2,12 +2,14 @@ require 'spec_helper'
 
 describe 'Post' do
   before :all do
+    @category1 = Category.find_or_create_by!(name: "Category1")
     @valid_posted = {
       title: "TITLE",
       slug: "SLUG",
       body: "BODY",
       datetime: Time.now.to_s,
       published_at: Time.now,
+      category: @category1,
     }
   end
 

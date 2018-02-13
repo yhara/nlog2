@@ -5,15 +5,16 @@ describe 'NLog2', type: :feature do
 
   before :all do
     Capybara.app = app
+    @category1 = Category.find_or_create_by!(name: "Category1")
+    @cat_diary = Category.find_or_create_by!(name: "Diary")
     @valid_params = {
       title: "TITLE",
       slug: "SLUG",
       body: "BODY",
       datetime: Time.now.to_s,
+      category: @category1,
     }
     @valid_posted = @valid_params.merge(published_at: Time.now)
-    @category1 = Category.find_or_create_by!(name: "Category1")
-    @cat_diary = Category.find_or_create_by!(name: "Diary")
   end
 
   before :each do
@@ -37,7 +38,7 @@ describe 'NLog2', type: :feature do
     context 'when category is given' do
       it 'should show the posts in the category' do
         Post.create!(@valid_posted.merge(title: "POST1", category: @category1))
-        Post.create!(@valid_posted.merge(title: "POST2"))
+        Post.create!(@valid_posted.merge(title: "POST2", category: @cat_diary))
         visit "/?category=#{@category1.name}"
         expect(page).to have_content("POST1")
         expect(page).not_to have_content("POST2")
@@ -55,7 +56,7 @@ describe 'NLog2', type: :feature do
     context 'when category is given' do
       it 'should show the posts in the category' do
         Post.create!(@valid_posted.merge(title: "POST1", category: @category1))
-        Post.create!(@valid_posted.merge(title: "POST2"))
+        Post.create!(@valid_posted.merge(title: "POST2", category: @cat_diary))
         visit "/_list?category=#{@category1.name}"
         expect(page).to have_content("POST1")
         expect(page).not_to have_content("POST2")

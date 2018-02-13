@@ -1,7 +1,7 @@
 class Entry < ActiveRecord::Base
   belongs_to :category
 
-  validates_presence_of :body, :title, :datetime, :published_at
+  validates_presence_of :body, :title, :datetime, :published_at, :category
 
   scope :published, ->{ where('datetime <= ?', Time.now) }
   scope :with_category_if, ->(cat){
