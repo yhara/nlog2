@@ -1,3 +1,7 @@
+## v1.1.0 (not yet)
+
+- category_id is now mandatory
+
 ## v1.0.1 (2017-10-09)
 
 - fix: could not edit an article
