@@ -42,6 +42,8 @@ form action="/_admin/edit" method="POST"
   div
     ' Category
     select name="category"
+      option 
+        = '---'
       - Category.list.each do |cat|
         option value=(cat.id) selected=(cat == @post.category ? 'selected' : nil)
           = cat.name

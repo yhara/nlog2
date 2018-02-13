@@ -2,8 +2,6 @@
 
 Edit 
 
-- When opened a form, category should be '---' or something
-  (to prevent choosing wrong category)
 - Save draft to localstorage
 
 Model

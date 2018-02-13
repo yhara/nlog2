@@ -9,7 +9,7 @@ describe 'NLog2 edit', type: :feature do
     fill_in "slug", with: params[:slug]
     fill_in "body", with: params[:body]
     fill_in "datetime", with: params[:datetime]
-    select params[:category].name, from: "category"
+    select params[:category].name, from: "category" if params[:category]
   end
 
   before :all do
@@ -181,6 +181,16 @@ describe 'NLog2 edit', type: :feature do
         fill_editor @valid_params.merge(datetime: "asdf")
         click_button "Preview"
       }.not_to raise_error
+    end
+
+    it 'should not raise an exception when category is not set' do
+      login
+      visit '/_admin/edit'
+      expect {
+        fill_editor @valid_params.merge(category: nil)
+        click_button "Save"
+      }.not_to raise_error
+      expect(page.current_path).to eq("/_admin/edit")
     end
 
     it 'should not create a post when validation is failed' do
