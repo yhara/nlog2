@@ -5,3 +5,5 @@
 /Capfile
 /config/deploy.rb
 /config/deploy/production.rb
+
+/coverage

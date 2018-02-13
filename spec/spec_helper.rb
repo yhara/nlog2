@@ -1,3 +1,4 @@
+require 'simplecov'; SimpleCov.start
 ENV['RACK_ENV'] = "test"
 require 'rack/test'
 require 'capybara/rspec'
