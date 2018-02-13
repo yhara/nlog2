@@ -15,6 +15,13 @@ describe 'Article' do
     Article.delete_all
   end
 
+  describe 'validation' do
+    it 'should check slug does not start with _' do
+      article = Article.new(@valid_posted.merge(slug: '_FOO'))
+      expect(article.valid?).to be(false)
+    end
+  end
+
   describe '#path_to_show' do
     it 'should use slag as url' do
       article = Article.create!(@valid_posted)
