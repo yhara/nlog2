@@ -56,13 +56,21 @@ html
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
 
-    header
-      .menu
-        .edit-button
-          a href='/_admin/edit' Edit
-      h1
-        a href='/' =(NLog2.config[:blog][:title])
+    .container
+      .left
+        header
+          .menu
+            .edit-button
+              a href='/_admin/edit' Edit
+          h1
+            a href='/' =(NLog2.config[:blog][:title])
 
-      a href='/_list' Recent Posts
+          a href='/_list' Recent Posts
 
-    == yield
+        main
+          == yield
+
+      .right
+        section
+          a href='/About' About the author
+

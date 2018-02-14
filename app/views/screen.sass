@@ -4,15 +4,29 @@
     font-size: 2.4rem
   h2
     font-size: 2.0rem
+
 // Large devices
 @media (min-width: 1024px)
   body
-    margin-left: 20%
-    margin-right: 20%
+    margin-left: 10%
   h1
     font-size: 3.2rem
   h2
     font-size: 2.4rem
+
+  // Sidebar
+  .container
+    display: flex
+
+  .left
+    flex-grow: 1
+    border-right: 1px dotted #aaa
+    padding-right: 20px
+
+  .right
+    flex-basis: 200px
+    flex-shrink: 0
+    padding-left: 20px
 
 html
   font-size: 62.5%
@@ -22,6 +36,9 @@ body
 code
   font-family: Monaco, monospace
   font-size: 1.4rem
+
+.left
+  padding-bottom: 2rem
 
 .edit-button
   float: right
@@ -37,6 +54,9 @@ code
 
 .post
   margin-bottom: 2em
+  // Keep sidebar width when there is a long URL in a post
+  word-break: break-all
+  word-wrap: break-word
 
   .social-buttons
     div
