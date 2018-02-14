@@ -23,7 +23,7 @@
   .preview
     == slim :_post_full, locals: {post: @post, short: false}
 
-form action="/_admin/edit" method="POST"
+form.editor action="/_admin/edit" method="POST"
   - if @post.id
     input type="hidden" name="id" value=(@post.id)
   div
