@@ -10,6 +10,7 @@ html
     link rel="alternate" type="application/atom+xml" title="Atom" href="/_feed.xml?nodiary=1"
 
     script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"
+    script defer="defer" src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"
 
     // Google Analytics
     - if (ga_id = NLog2.config[:blog][:ga_tracking_id])
@@ -71,6 +72,17 @@ html
           == yield
 
       .right
-        section
+        section.about
+          h3 About
+
           a href='/About' About the author
 
+          ul.links
+            li
+              i class="fab fa-twitter"
+              '
+              a href='https://github.com/yhara' Twitter
+            li
+              i class="fab fa-github"
+              '
+              a href='https://github.com/yhara' GitHub
