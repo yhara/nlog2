@@ -80,6 +80,23 @@ html
                 a href="/_list?category=#{cat.name}"
                   = cat.name
 
+        // Ads
+        - c = NLog2.config.dig(:ads, :adsense_client)
+        - s = NLog2.config.dig(:ads, :adsense_slot_sidebar)
+        - if c && s
+          section
+            h3 Ads
+
+            | <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-client="#{c}"
+                   data-ad-slot="#{s}"
+                   data-ad-format="auto"></ins>
+              <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+
         section.about
           h3 About
 
