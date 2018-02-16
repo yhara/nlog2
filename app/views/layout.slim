@@ -72,12 +72,12 @@ html
           == yield
 
       .right
-        section
+        section.entries
           h3 Posts
           == slim :_post_list, locals: {posts: @sidebar_posts, sidebar: true}
           a.more href='/_list' (more...)
 
-        section
+        section.entries
           h3 Articles
           == slim :_post_list, locals: {posts: @sidebar_articles, sidebar: true}
           a.more href='/_list#Articles' (more...)
@@ -112,7 +112,7 @@ html
 
           a href='/About' About the author
 
-          ul.links
+          ul
             li
               i class="fab fa-twitter"
               '
