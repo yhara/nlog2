@@ -29,6 +29,13 @@ class NLog2 < Sinatra::Base
     return per
   end
 
+  # Load sidebar contents
+  # (Note: this code also runs for /admin)
+  before do
+    @sidebar_posts = Post.published.order(datetime: :desc).limit(5)
+    @sidebar_articles = Article.published.order(datetime: :desc).limit(5)
+  end
+
   get '/' do
     if (cat_name = params[:category])
       @category = Category.find_by!(name: cat_name)

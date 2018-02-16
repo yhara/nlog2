@@ -41,7 +41,7 @@ describe 'NLog2', type: :feature do
         Post.create!(@valid_posted.merge(title: "POST2", category: @cat_diary))
         visit "/?category=#{@category1.name}"
         expect(page).to have_content("POST1")
-        expect(page).not_to have_content("POST2")
+        expect(find('main').text).not_to include("POST2")
       end
     end
   end
@@ -59,7 +59,7 @@ describe 'NLog2', type: :feature do
         Post.create!(@valid_posted.merge(title: "POST2", category: @cat_diary))
         visit "/_list?category=#{@category1.name}"
         expect(page).to have_content("POST1")
-        expect(page).not_to have_content("POST2")
+        expect(find('main').text).not_to include("POST2")
       end
     end
   end

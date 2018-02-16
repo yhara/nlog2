@@ -1,12 +1,16 @@
 ul
   - posts.each do |post|
+    - date = (post.is_a?(Article) ? post.author_updated_at.to_date : post.author_date)
     li
-      span = (post.is_a?(Article) ? post.author_updated_at.to_date : post.author_date)
-      '
+      - if !sidebar
+        span.date = date
+        '
       - if (cat = post.category)
         | [
         a href="/_list?category=#{Rack::Utils.escape cat.name}"
           = "#{cat.name}"
         ' ]
       a href=(post.path_to_show) = post.title
-
+      '
+      - if sidebar
+        span.date = "(#{date})"

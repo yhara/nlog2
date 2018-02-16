@@ -16,7 +16,7 @@
 - unless @more_posts.empty?
   h2 More posts
 
-  == slim :_post_list, locals: {posts: @more_posts}
+  == slim :_post_list, locals: {posts: @more_posts, sidebar: false}
 
 - t = NLog2.config.dig(:ads, :amazon_ad_tag)
 - if t

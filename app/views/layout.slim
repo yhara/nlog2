@@ -73,6 +73,16 @@ html
 
       .right
         section
+          h3 Posts
+          == slim :_post_list, locals: {posts: @sidebar_posts, sidebar: true}
+          a.more href='/_list' (more...)
+
+        section
+          h3 Articles
+          == slim :_post_list, locals: {posts: @sidebar_articles, sidebar: true}
+          a.more href='/_list#Articles' (more...)
+
+        section.category
           h3 Category
           ul
             - Category.order(:name).each do |cat|
