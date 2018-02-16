@@ -1,4 +1,4 @@
-== slim :_post_list, locals: {posts: @posts}
+== slim :_post_list, locals: {posts: @posts, sidebar: false}
 
 div
   - unless @posts.first_page? 
@@ -10,5 +10,6 @@ div
       | Next &raquo;
 
 h2 Articles
+a name="Articles"
 
-== slim :_post_list, locals: {posts: @articles}
+== slim :_post_list, locals: {posts: @articles, sidebar: false}

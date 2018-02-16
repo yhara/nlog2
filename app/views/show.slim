@@ -13,16 +13,12 @@
       (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
 
-- t = NLog2.config.dig(:ads, :amazon_ad_tag)
-- if t
-  br
-  | <script type="text/javascript"><!--
-    amazon_ad_tag = "#{t}"; amazon_ad_width = "300"; amazon_ad_height = "250"; amazon_ad_logo = "hide";//--></script>
-
 - unless @more_posts.empty?
   h2 More posts
 
-  == slim :_post_list, locals: {posts: @more_posts}
+  == slim :_post_list, locals: {posts: @more_posts, sidebar: false}
 
+- t = NLog2.config.dig(:ads, :amazon_ad_tag)
 - if t
-  | <script type="text/javascript" src="http://ir-jp.amazon-adsystem.com/s/ads.js"></script>
+  div style='margin: auto'
+    | <iframe src="https://rcm-fe.amazon-adsystem.com/e/cm?o=9&p=48&l=ez&f=ifr&linkID=8cfe5a636d005f397f203f9dc6071063&t=#{t}&tracking_id=#{t}" width="728" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>

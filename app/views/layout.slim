@@ -10,6 +10,7 @@ html
     link rel="alternate" type="application/atom+xml" title="Atom" href="/_feed.xml?nodiary=1"
 
     script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"
+    script defer="defer" src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"
 
     // Google Analytics
     - if (ga_id = NLog2.config[:blog][:ga_tracking_id])
@@ -56,13 +57,67 @@ html
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
 
-    header
-      .menu
-        .edit-button
-          a href='/_admin/edit' Edit
-      h1
-        a href='/' =(NLog2.config[:blog][:title])
+    .container
+      .left
+        header
+          .menu
+            .edit-button
+              a href='/_admin/edit' Edit
+          h1
+            a href='/' =(NLog2.config[:blog][:title])
 
-      a href='/_list' Recent Posts
+          a href='/_list' Recent Posts
 
-    == yield
+        main
+          == yield
+
+      .right
+        section
+          h3 Posts
+          == slim :_post_list, locals: {posts: @sidebar_posts, sidebar: true}
+          a.more href='/_list' (more...)
+
+        section
+          h3 Articles
+          == slim :_post_list, locals: {posts: @sidebar_articles, sidebar: true}
+          a.more href='/_list#Articles' (more...)
+
+        section.category
+          h3 Category
+          ul
+            - Category.order(:name).each do |cat|
+              li
+                a href="/_list?category=#{cat.name}"
+                  = cat.name
+
+        // Ads
+        - c = NLog2.config.dig(:ads, :adsense_client)
+        - s = NLog2.config.dig(:ads, :adsense_slot_sidebar)
+        - if c && s
+          section
+            h3 Ads
+
+            | <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-client="#{c}"
+                   data-ad-slot="#{s}"
+                   data-ad-format="auto"></ins>
+              <script>
+              (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+
+        section.about
+          h3 About
+
+          a href='/About' About the author
+
+          ul.links
+            li
+              i class="fab fa-twitter"
+              '
+              a href='https://github.com/yhara' Twitter
+            li
+              i class="fab fa-github"
+              '
+              a href='https://github.com/yhara' GitHub
