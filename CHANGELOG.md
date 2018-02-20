@@ -1,5 +1,6 @@
 ## v1.1.0 (not yet)
 
+- Add sidebar
 - category_id is now mandatory
 
 ## v1.0.1 (2017-10-09)
