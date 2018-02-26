@@ -37,4 +37,18 @@ namespace :config do
   end
 end
 
+namespace :release do
+  desc "git ci, git tag and git push"
+  task :commit_and_push do
+    sh "git diff"
+    v = NLog2::VERSION
+    puts "release as #{v}? [y/N]"
+    if $stdin.gets.chomp == "y"
+      sh "git ci -am '#{v}'"
+      sh "git tag '#{v}'"
+      sh "git push origin --tags"
+    end
+  end
+end
+
 task default: :test
