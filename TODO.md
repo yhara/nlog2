@@ -7,7 +7,7 @@ Edit
 
 View
 
-- Sidebar
++ Sidebar
 
 Model
 
