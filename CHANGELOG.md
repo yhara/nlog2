@@ -1,3 +1,9 @@
+## v1.1.1 (2017-04-29)
+
+- Bundle update (security fixes)
+  - of loofah 2.2.0 https://github.com/flavorjones/loofah/issues/144
+  - of rails-html-sanitizer 1.4.0 https://nvd.nist.gov/vuln/detail/CVE-2018-3741
+
 ## v1.1.0 (2017-02-26)
 
 - Add sidebar
