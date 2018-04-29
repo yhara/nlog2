@@ -46,7 +46,7 @@ namespace :release do
     if $stdin.gets.chomp == "y"
       sh "git ci -am '#{v}'"
       sh "git tag '#{v}'"
-      sh "git push origin --tags"
+      sh "git push origin master --tags"
     end
   end
 end
