@@ -1,3 +1,8 @@
+## v1.1.2 (2017-06-06)
+
+- Bundle update (security fixes)
+  - of sinatra 2.0.1 https://nvd.nist.gov/vuln/detail/CVE-2018-11627
+
 ## v1.1.1 (2017-04-29)
 
 - Bundle update (security fixes)
