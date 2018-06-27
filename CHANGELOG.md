@@ -1,3 +1,7 @@
+## v1.1.3 (2018-06-28)
+
+- Bundle update
+
 ## v1.1.2 (2017-06-06)
 
 - Bundle update (security fixes)
