@@ -1,3 +1,7 @@
+## v1.1.4 (2018-11-07)
+
+- security: Update rack, loofah, nokogiri
+
 ## v1.1.3 (2018-06-28)
 
 - Bundle update
