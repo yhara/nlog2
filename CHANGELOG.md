@@ -1,3 +1,7 @@
+## HEAD
+
+- chores: migrated to pagy gem
+
 ## v1.1.4 (2018-11-07)
 
 - security: Update rack, loofah, nokogiri

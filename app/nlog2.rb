@@ -10,7 +10,7 @@ require 'sass'
 require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
-require 'kaminari'
+require 'pagy'
 # Database
 require 'sinatra/activerecord'
 require_relative 'models/entry.rb'
@@ -35,6 +35,8 @@ class NLog2 < Sinatra::Base
   def self.logger=(l); @@logger=l; end
 
   register Sinatra::ActiveRecordExtension
+  include Pagy::Backend
+
   configure(:development) do
     register Sinatra::Reloader
     also_reload "#{__dir__}/**/*.rb"
@@ -51,6 +53,10 @@ class NLog2 < Sinatra::Base
 
     use Rack::CommonLogger, NLog2.logger
     ActiveRecord::Base.logger = NLog2.logger
+  end
+
+  helpers do
+    include Pagy::Frontend
   end
 
   before do

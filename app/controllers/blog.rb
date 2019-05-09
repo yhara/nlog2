@@ -43,10 +43,9 @@ class NLog2 < Sinatra::Base
       @category = nil
     end
 
-    @posts = Post.published
+    @pagy, @posts = pagy(Post.published
                  .with_category_if(@category)
-                 .order(datetime: :desc)
-                 .page(params[:page]).per(per_in(1..10))
+                 .order(datetime: :desc), items: per_in(1..10))
     slim :index
   end
 
@@ -57,10 +56,9 @@ class NLog2 < Sinatra::Base
       @category = nil
     end
 
-    @posts = Post.published
+    @pagy, @posts = pagy(Post.published
                  .with_category_if(@category)
-                 .order(datetime: :desc)
-                 .page(params[:page]).per(per_in(1..100))
+                 .order(datetime: :desc), items: per_in(1..100))
     @articles = Article.published
                        .with_category_if(@category)
                        .order(updated_at: :desc)

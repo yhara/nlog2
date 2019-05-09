@@ -1,13 +1,7 @@
 == slim :_post_list, locals: {posts: @posts, sidebar: false}
 
 div
-  - unless @posts.first_page? 
-    a href=(previous_page_path(@posts))
-      | &laquo; Prev
-  '
-  - unless @posts.last_page?
-    a href=(next_page_path(@posts))
-      | Next &raquo;
+  == pagy_nav(@pagy)
 
 h2 Articles
 a name="Articles"
