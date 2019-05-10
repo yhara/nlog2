@@ -1,4 +1,4 @@
-## HEAD
+## v1.1.5 (2019-05-10)
 
 - chores: migrated to pagy gem
 

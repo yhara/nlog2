@@ -23,7 +23,7 @@ require_relative 'controllers/admin/edit.rb'
 require_relative 'controllers/admin/config.rb'
 
 class NLog2 < Sinatra::Base
-  VERSION = "1.1.4"
+  VERSION = "1.1.5"
 
   class NotFound < StandardError; end
 

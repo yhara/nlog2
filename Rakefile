@@ -46,6 +46,7 @@ task :release do
     sh "git ci -am '#{v}'"
     sh "git tag '#{v}'"
     sh "git push origin master --tags"
+    sh "bundle exec cap production deploy"
   end
 end
 
