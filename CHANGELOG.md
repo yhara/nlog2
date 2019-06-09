@@ -1,4 +1,4 @@
-## HEAD
+## v1.1.6 (2019-06-09)
 
 - fix: 500 on page overflow (#4)
 
