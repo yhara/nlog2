@@ -11,6 +11,7 @@ require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'
 require 'pagy'
+require 'pagy/extras/overflow'
 # Database
 require 'sinatra/activerecord'
 require_relative 'models/entry.rb'
@@ -45,6 +46,7 @@ class NLog2 < Sinatra::Base
   configure do
     enable :method_override
     set :views, "#{__dir__}/views"
+    Pagy::VARS[:overflow] = :last_page
 
     enable :logging
     file = File.new("#{__dir__}/../log/#{settings.environment}.log", 'a+')

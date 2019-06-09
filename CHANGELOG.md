@@ -1,3 +1,7 @@
+## HEAD
+
+- fix: 500 on page overflow (#4)
+
 ## v1.1.5 (2019-05-10)
 
 - chores: migrated to pagy gem

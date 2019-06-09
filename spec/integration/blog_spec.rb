@@ -44,6 +44,13 @@ describe 'NLog2', type: :feature do
         expect(find('main').text).not_to include("POST2")
       end
     end
+
+    context 'when page is given' do
+      it 'should not raise error for unexisting page' do
+        visit '/?page=999'
+        expect(page.status_code).to eq(200)
+      end
+    end
   end
 
   describe '/_list' do
