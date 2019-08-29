@@ -15,6 +15,7 @@ gem 'pagy'
 gem 'rouge'
 
 # Database 
+gem 'activerecord', '< 6'
 gem 'sinatra-activerecord'
 gem 'sqlite3'
 
