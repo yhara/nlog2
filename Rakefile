@@ -39,7 +39,7 @@ end
 
 desc "git ci, git tag and git push"
 task :release do
-  sh "git diff"
+  sh "git diff HEAD"
   v = "v#{NLog2::VERSION}"
   puts "release as #{v}? [y/N]"
   if $stdin.gets.chomp == "y"

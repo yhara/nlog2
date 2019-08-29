@@ -1,3 +1,7 @@
+## v1.1.7 (2019-08-29)
+
+- security: Update nokogiri
+
 ## v1.1.6 (2019-06-09)
 
 - fix: 500 on page overflow (#4)
