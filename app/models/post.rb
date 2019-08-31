@@ -4,7 +4,7 @@ class Post < Entry
   scope :future, ->{ where('datetime > ?', Time.now) }
   scope :uncategorized, ->{ where('category_id IS NULL') }
   scope :without_category, ->(cat){
-    where.not(category: cat).or(Post.where('category_id IS NULL'))
+    where.not(category: cat).or(where('category_id IS NULL'))
   }
   scope :is_not, ->(post){
     where.not(id: post.id)

@@ -15,8 +15,8 @@ gem 'pagy'
 gem 'rouge'
 
 # Database 
-gem 'activerecord', '< 6'
-gem 'sinatra-activerecord'
+gem 'activerecord'
+gem 'sinatra-activerecord', github: 'greysteil/sinatra-activerecord', branch: 'support-rails-6'
 gem 'sqlite3'
 
 # Test

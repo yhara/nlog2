@@ -1,3 +1,7 @@
+## v1.1.8 (2019-08-31)
+
+- chores: Upgrade to ActiveRecord 6
+
 ## v1.1.7 (2019-08-29)
 
 - security: Update nokogiri
