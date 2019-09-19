@@ -16,7 +16,7 @@ gem 'rouge'
 
 # Database 
 gem 'activerecord'
-gem 'sinatra-activerecord', github: 'greysteil/sinatra-activerecord', branch: 'support-rails-6'
+gem 'sinatra-activerecord'
 gem 'sqlite3'
 
 # Test
