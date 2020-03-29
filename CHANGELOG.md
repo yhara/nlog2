@@ -1,3 +1,8 @@
+## v1.1.9 (2020-03-29)
+
+- chores: bundle update
+- fix: Fixed fragile test
+
 ## v1.1.8 (2019-08-31)
 
 - chores: Upgrade to ActiveRecord 6
