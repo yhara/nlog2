@@ -210,11 +210,11 @@ describe 'NLog2 edit', type: :feature do
       it 'should parse datetime in that timezone' do
         login
         visit '/_admin/edit'
-        fill_editor @valid_params.merge(datetime: '1234-12-12 00:00:00')
+        fill_editor @valid_params.merge(datetime: '2020-12-12 00:00:00')
         click_button "Save"
                    
         new_post = Post.order("id desc").first
-        expect(new_post.datetime).to eq(Time.parse("1234-12-12 00:00:00 +1000").utc)
+        expect(new_post.datetime).to eq(Time.parse("2020-12-12 00:00:00 +0900").utc)
       end
     end
   end

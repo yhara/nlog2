@@ -19,4 +19,4 @@
   # Basic auth password (use `bundle exec rake config:hash_password`)
   :password_hash: "$2a$10$AnoVlwt7WPzYVU071jEpmOWkEYhVFqiG3xFMySdfvJjwtMfwS0KRK"
 
-:timezone: 'Sydney'
+:timezone: 'Tokyo'
