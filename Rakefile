@@ -40,7 +40,7 @@ end
 desc "git ci, git tag and git push"
 task :release do
   sh "git diff HEAD"
-  v = "v#{NLog2::VERSION}"
+  v = File.read('CHANGELOG.md')[/v[\d\.]+/]
   puts "release as #{v}? [y/N]"
   if $stdin.gets.chomp == "y"
     sh "git ci -am '#{v}'"
