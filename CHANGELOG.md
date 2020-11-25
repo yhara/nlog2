@@ -1,3 +1,14 @@
+## v1.2.0 (2020-03-29)
+
+Notable changes
+
+- Changed database file name to `production.sqlite3`
+- Removed constant NLog2::VERSION
+
+Other changes
+
+- security: update rack, activesupport
+
 ## v1.1.9 (2020-03-29)
 
 - chores: bundle update

@@ -12,7 +12,7 @@ I'd like to keep the code simple enough to do that.)
 
 ## Requirements
 
-- Ruby >= 2.3
+- Ruby (tested with 2.7)
 
 ## Install
 
