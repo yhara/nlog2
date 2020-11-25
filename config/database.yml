@@ -13,5 +13,4 @@ test:
 
 production:
   <<: *default
-  database: db/nlog2.sqlite3
-
+  database: db/production.sqlite3
