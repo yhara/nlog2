@@ -1,3 +1,7 @@
+## v1.2.1 (2021-02-07)
+
+- security: Update nokogiri, redcarpet
+
 ## v1.2.0 (2020-03-29)
 
 Notable changes
