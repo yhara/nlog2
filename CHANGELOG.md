@@ -1,3 +1,7 @@
+## v1.3.0 (2021-06-06)
+
+- Changed google analytics tag format
+
 ## v1.2.1 (2021-02-07)
 
 - security: Update nokogiri, redcarpet
