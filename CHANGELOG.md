@@ -1,4 +1,4 @@
-## v1.3.0 (2021-06-06)
+## v1.3.1 (2021-06-06)
 
 - Changed google analytics tag format
 
