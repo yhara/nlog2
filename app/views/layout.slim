@@ -3,7 +3,7 @@ html
   head
     // Google Analytics
     - if (ga_id = NLog2.config[:blog][:ga_tracking_id])
-      script async src="https://www.googletagmanager.com/gtag/js?id=#{ga_id}"
+      <script async src="https://www.googletagmanager.com/gtag/js?id=#{ga_id}"></script>
       javascript:
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
