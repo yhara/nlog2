@@ -1,3 +1,7 @@
+## v1.3.2 (2021-08-13)
+
+- security: Update addressable
+
 ## v1.3.1 (2021-06-06)
 
 - Changed google analytics tag format
