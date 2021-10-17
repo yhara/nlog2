@@ -1,3 +1,7 @@
+## v1.3.3 (2021-08-13)
+
+- security: bundle update
+
 ## v1.3.2 (2021-08-13)
 
 - security: Update addressable

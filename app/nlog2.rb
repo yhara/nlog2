@@ -44,7 +44,7 @@ class NLog2 < Sinatra::Base
   configure do
     enable :method_override
     set :views, "#{__dir__}/views"
-    Pagy::VARS[:overflow] = :last_page
+    Pagy::DEFAULT[:overflow] = :last_page
 
     enable :logging
     file = File.new("#{__dir__}/../log/#{settings.environment}.log", 'a+')
