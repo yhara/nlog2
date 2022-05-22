@@ -1,3 +1,7 @@
+## v1.3.4 (2022-05-22)
+
+- security: bundle update
+
 ## v1.3.3 (2021-08-13)
 
 - security: bundle update
