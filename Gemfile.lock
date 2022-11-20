@@ -61,6 +61,10 @@ GEM
     nokogiri (1.13.6)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
+    nokogiri (1.13.6-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.13.6-x86_64-linux)
+      racc (~> 1.4)
     pagy (5.10.1)
       activesupport
     public_suffix (4.0.7)
@@ -133,7 +137,9 @@ GEM
       nokogiri (~> 1.8)
 
 PLATFORMS
+  arm64-darwin
   ruby
+  x86_64-linux
 
 DEPENDENCIES
   activerecord
@@ -163,4 +169,4 @@ DEPENDENCIES
   webrick
 
 BUNDLED WITH
-   2.2.22
+   2.3.24
