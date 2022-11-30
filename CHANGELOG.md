@@ -1,3 +1,7 @@
+## v1.3.7 (2022-11-30)
+
+- fix css rendering error
+
 ## v1.3.6 (2022-11-20)
 
 - security: bundle update
