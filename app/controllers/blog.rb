@@ -1,3 +1,5 @@
+require 'sassc'
+
 class NLog2 < Sinatra::Base
   # View Helpers
   helpers do
@@ -28,6 +30,9 @@ class NLog2 < Sinatra::Base
     return rng.end if per > rng.end
     return per
   end
+
+  set :rendered_sass, SassC::Engine.new(File.read("#{__dir__}/../views/screen.sass"),
+                                        syntax: :sass, style: :compressed).render
 
   # Load sidebar contents
   # (Note: this code also runs for /admin)
@@ -90,7 +95,8 @@ class NLog2 < Sinatra::Base
   end
 
   get '/screen.css' do
-    sass :screen  # renders views/screen.sass as screen.css
+    headers 'Content-Type' => 'text/css'
+    settings.rendered_sass
   end
 
   get '/highlight.css' do

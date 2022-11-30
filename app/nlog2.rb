@@ -8,7 +8,6 @@ require 'active_support/core_ext/date'
 require 'active_support/core_ext/object/to_query'
 # View
 require 'slim'
-require 'sass'
 require 'redcarpet'
 require 'rouge'
 require 'rouge/plugins/redcarpet'

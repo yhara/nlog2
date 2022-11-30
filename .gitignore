@@ -1,3 +1,4 @@
+/.sass-cache
 /db/*.sqlite3
 /log/*.log
 /config/nlog2.yml

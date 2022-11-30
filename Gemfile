@@ -8,7 +8,7 @@ gem 'bcrypt'
 
 # View
 gem 'slim'
-gem 'sass'
+gem 'sassc'
 gem 'redcarpet'
 gem 'builder'
 gem 'pagy'

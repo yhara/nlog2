@@ -146,4 +146,11 @@ describe 'NLog2', type: :feature do
       end
     end
   end
+
+  describe 'css' do
+    it 'should not raise exception' do
+      visit "/screen.css"
+      expect(page.body).to include("font-size")
+    end
+  end
 end
