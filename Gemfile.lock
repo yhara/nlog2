@@ -59,6 +59,8 @@ GEM
     net-ssh (7.1.0)
     nokogiri (1.15.2-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.15.2-x86_64-linux)
+      racc (~> 1.4)
     pagy (6.0.4)
     public_suffix (5.0.1)
     racc (1.6.2)
@@ -111,6 +113,7 @@ GEM
       temple (~> 0.10.0)
       tilt (>= 2.1.0)
     sqlite3 (1.6.3-arm64-darwin)
+    sqlite3 (1.6.3-x86_64-linux)
     sshkit (1.21.4)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
@@ -125,6 +128,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
   activerecord
