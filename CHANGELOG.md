@@ -1,3 +1,7 @@
+## v1.4.0 (2023-06-03)
+
+- Allow '-' in page name
+
 ## v1.3.7 (2022-11-30)
 
 - fix css rendering error
