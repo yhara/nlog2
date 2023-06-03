@@ -87,7 +87,7 @@ class NLog2 < Sinatra::Base
   end
 
   # Articles
-  get %r{/([\/\w-]+)} do |name|
+  get %r{/([\w-]+)} do |name|
     @post = Article.published.find_by!(slug: name)
     @title = @post.title
     @more_posts = @post.more_posts
