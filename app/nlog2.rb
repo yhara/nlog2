@@ -2,10 +2,7 @@ require 'time'
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'bcrypt'
-  # Workaround for `uninitialized constant ActiveSupport::XmlMini::IsolatedExecutionState`
-  require "active_support/isolated_execution_state"
-require 'active_support/core_ext/date'
-require 'active_support/core_ext/object/to_query'
+require 'active_support'
 # View
 require 'slim'
 require 'redcarpet'
