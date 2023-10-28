@@ -1,3 +1,5 @@
+# Example config (also used as test data)
+
 :blog:
   :url: "http://yhara.jp"
   :title: "My Blog"
@@ -18,5 +20,9 @@
   :username: "jhon"
   # Basic auth password (use `bundle exec rake config:hash_password`)
   :password_hash: "$2a$10$AnoVlwt7WPzYVU071jEpmOWkEYhVFqiG3xFMySdfvJjwtMfwS0KRK"
+
+# Where to store attached images (must starts with "public/")
+# Formatted with Time#strftime
+:image_path: "public/_images/test/%Y/%m%d-"
 
 :timezone: 'Tokyo'
