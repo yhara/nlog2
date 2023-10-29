@@ -178,6 +178,19 @@ describe 'NLog2 edit', type: :feature do
       expect(page.current_path).to(end_with("/1234/12/12/SLUG2"))
     end
 
+    it 'should set unused images to be used' do
+      image = Image.create(orig_path: "", thumb_path: "")
+      expect(image.entry_id).to be_nil
+
+      login
+      visit '/_admin/edit'
+      fill_editor @valid_params
+      click_button "Save"
+
+      image.reload
+      expect(image.entry_id).not_to be_nil
+    end
+
     it 'should set current time if blank' do
       Timecop.freeze(@now) do
         login
