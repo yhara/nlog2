@@ -104,7 +104,7 @@ describe 'NLog2 edit', type: :feature do
     end
 
     context 'when an Image is attached' do
-      it 'should create an Image and thumbnail ' do
+      it 'should create an Image and thumbnail' do
         jpg_path = "#{__dir__}/../data/keeb.jpg"
         count = Image.count
 
