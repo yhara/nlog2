@@ -137,6 +137,22 @@ describe 'NLog2 edit', type: :feature do
         expect(File.read(Image.last.thumb_file_path))
           .to eq(File.read(png_path))
       end
+
+      it 'should give different filename if collided' do
+        jpg_path = "#{__dir__}/../data/keeb.jpg"
+        count = Image.count
+
+        login
+        2.times do
+          visit '/_admin/edit/'
+          fill_editor @valid_params
+          attach_file "image", jpg_path
+          click_button "Preview"
+        end
+
+        expect(Image.count).to eq(count+2)
+        expect(Image.last.orig_file_path).to include("keeb2.jpg")
+      end
     end
   end
 

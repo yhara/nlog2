@@ -42,7 +42,7 @@ class NLog2 < Sinatra::Base
     if (x = params[:image])
       image = Image.new
       image.tempfile = x[:tempfile]
-      image.orig_filename = x[:filename]
+      image.posted_filename = x[:filename]
       image.save!
     end
 
