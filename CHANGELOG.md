@@ -1,3 +1,7 @@
+## v1.5.0 (2023-10-31)
+
+- Image attaching support
+
 ## v1.4.2 (2023-06-03)
 
 - Allow '-' in page name
