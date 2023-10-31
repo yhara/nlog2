@@ -59,7 +59,7 @@ form.editor action="/_admin/edit" method="POST" enctype="multipart/form-data"
 
 table
   tbody
-    - Image.unused.each do |image|
+    - (Image.unused.to_a + @post.images.to_a).each do |image|
       tr
         td
           a href=(image.orig_html_path) target="_blank"
