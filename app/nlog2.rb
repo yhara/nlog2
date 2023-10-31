@@ -13,6 +13,7 @@ require 'pagy/extras/overflow'
 # Database
 require 'sinatra/activerecord'
 require_relative 'models/entry.rb'
+require_relative 'models/image.rb'
 require_relative 'models/post.rb'
 require_relative 'models/article.rb'
 require_relative 'models/category.rb'
@@ -27,6 +28,7 @@ class NLog2 < Sinatra::Base
   def self.config; @@config or raise; end
   def self.load_config(path)
     @@config = YAML.load_file(path)
+    raise ":image_path must start with 'public/'" unless @@config[:image_path].start_with?("public/")
   end
   def self.logger; @@logger or raise; end
   def self.logger=(l); @@logger=l; end
@@ -37,6 +39,14 @@ class NLog2 < Sinatra::Base
   configure(:development) do
     register Sinatra::Reloader
     also_reload "#{__dir__}/**/*.rb"
+
+    get %r{/_images/(.*)} do |name|
+      img_base = File.expand_path("#{__dir__}/../public/_images")
+      img_path = File.expand_path("#{__dir__}/../public/_images/#{name}")
+      if img_path.start_with?(img_base)
+        send_file img_path
+      end
+    end
   end
 
   configure do

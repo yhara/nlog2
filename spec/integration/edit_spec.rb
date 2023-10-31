@@ -83,7 +83,7 @@ describe 'NLog2 edit', type: :feature do
       expect(find_field("category").value).to eq(@category2.id.to_s)
     end
 
-    it 'should not create a record' do
+    it 'should not create a Post' do
       count = Post.count
 
       login
@@ -101,6 +101,58 @@ describe 'NLog2 edit', type: :feature do
         fill_editor @valid_params.merge(datetime: "asdf")
         click_button "Preview"
       }.not_to raise_error
+    end
+
+    context 'when an Image is attached' do
+      it 'should create an Image and thumbnail' do
+        jpg_path = "#{__dir__}/../data/keeb.jpg"
+        count = Image.count
+
+        login
+        visit '/_admin/edit/'
+        fill_editor @valid_params
+        attach_file "image", jpg_path
+        click_button "Preview"
+
+        expect(Image.count).to eq(count+1)
+        expect(File.read(Image.last.orig_file_path))
+          .to eq(File.read(jpg_path))
+        expect(File.size(Image.last.thumb_file_path))
+          .to be < File.size(jpg_path)
+      end
+
+      it 'should not create thumbnail if it\'s small' do
+        png_path = "#{__dir__}/../data/shiika_logo.png"
+        count = Image.count
+
+        login
+        visit '/_admin/edit/'
+        fill_editor @valid_params
+        attach_file "image", png_path
+        click_button "Preview"
+
+        expect(Image.count).to eq(count+1)
+        expect(File.read(Image.last.orig_file_path))
+          .to eq(File.read(png_path))
+        expect(File.read(Image.last.thumb_file_path))
+          .to eq(File.read(png_path))
+      end
+
+      it 'should give different filename if collided' do
+        jpg_path = "#{__dir__}/../data/keeb.jpg"
+        count = Image.count
+
+        login
+        2.times do
+          visit '/_admin/edit/'
+          fill_editor @valid_params
+          attach_file "image", jpg_path
+          click_button "Preview"
+        end
+
+        expect(Image.count).to eq(count+2)
+        expect(Image.last.orig_file_path).to include("keeb2.jpg")
+      end
     end
   end
 
@@ -140,6 +192,19 @@ describe 'NLog2 edit', type: :feature do
       expect(updated.slug).to eq("SLUG2")
       expect(updated.body).to eq("BODY2")
       expect(page.current_path).to(end_with("/1234/12/12/SLUG2"))
+    end
+
+    it 'should set unused images to be used' do
+      image = Image.create(orig_path: "", thumb_path: "")
+      expect(image.entry_id).to be_nil
+
+      login
+      visit '/_admin/edit'
+      fill_editor @valid_params
+      click_button "Save"
+
+      image.reload
+      expect(image.entry_id).not_to be_nil
     end
 
     it 'should set current time if blank' do

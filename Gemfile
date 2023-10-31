@@ -6,6 +6,9 @@ gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'bcrypt'
 
+# Image attaching
+gem 'rmagick'
+
 # View
 gem 'slim'
 gem 'sassc'

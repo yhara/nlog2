@@ -18,6 +18,14 @@ RSpec.configure do |config|
   config.after(:each) do
     #DatabaseRewinder.clean
   end
+
+  config.after(:each) do
+    # Delete images created during testing
+    if NLog2.config[:image_path].start_with?("public/_images/test")
+      dir = "#{__dir__}/../public/_images/test"
+      FileUtils.rm_r(dir) if File.directory?(dir)
+    end
+  end
 end
 
 class NLog2

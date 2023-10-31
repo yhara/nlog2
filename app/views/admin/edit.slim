@@ -23,7 +23,7 @@
   .preview
     == slim :_post_full, locals: {post: @post, short: false}
 
-form.editor action="/_admin/edit" method="POST"
+form.editor action="/_admin/edit" method="POST" enctype="multipart/form-data"
   - if @post.id
     input type="hidden" name="id" value=(@post.id)
   div
@@ -53,3 +53,23 @@ form.editor action="/_admin/edit" method="POST"
   div
     input type="submit" name="submit_by" value="Preview"
     input type="submit" name="submit_by" value="Save"
+
+  div
+    input type="file" name="image"
+
+table
+  tbody
+    - (Image.unused.to_a + @post.images.to_a).each do |image|
+      tr
+        td
+          a href=(image.orig_html_path) target="_blank"
+            img src=(image.thumb_html_path)
+        td
+          p
+            - tag = %{<a href="#{image.orig_html_path}" target="_blank"><img src="#{image.thumb_html_path}"></a>}
+            button onclick="navigator.clipboard.writeText('#{tag}')"
+              ' Copy tag
+
+          p
+            button hx-confirm="Delete '#{image.orig_html_path}'?" hx-post="/_admin/delete_image?id=#{image.id}" hx-swap="outerHTML"
+              ' Delete

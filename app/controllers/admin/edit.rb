@@ -39,9 +39,17 @@ class NLog2 < Sinatra::Base
                        Category.find_by(id: params[:category].to_i)
                      end
 
+    if (x = params[:image])
+      image = Image.new
+      image.tempfile = x[:tempfile]
+      image.posted_filename = x[:filename]
+      image.save!
+    end
+
     if params[:submit_by] == "Save" && !@flash[:error]
       @post.published_at ||= Time.now
       if @post.save
+        Image.update_unused(@post)
         if @post.future?
           @flash[:notice] = "Scheduled `#{@post.title}' to be posted at #{@post.author_datetime}"
           @post = Post.new
@@ -60,5 +68,11 @@ class NLog2 < Sinatra::Base
       @title = "Edit"
       slim :'admin/edit'
     end
+  end
+
+  post '/_admin/delete_image' do
+    image = Image.find(params[:id])
+    image.destroy!
+    "Deleted"
   end
 end
