@@ -1,5 +1,6 @@
 class Entry < ActiveRecord::Base
   belongs_to :category
+  has_many :images
 
   validates_presence_of :body, :title, :datetime, :published_at, :category
 
