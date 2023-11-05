@@ -1,3 +1,7 @@
+## v1.5.1 (2023-11-05)
+
+- fix error on reediting an entry
+
 ## v1.5.0 (2023-10-31)
 
 - Image attaching support
