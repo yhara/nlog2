@@ -14,7 +14,7 @@ gem 'slim'
 gem 'sassc'
 gem 'redcarpet'
 gem 'builder'
-gem 'pagy'
+gem 'pagy', '< 43'
 gem 'rouge'
 
 # Database 
@@ -32,12 +32,14 @@ group :test do
   gem 'simplecov'
 end
 
-# Deploy
+# Dev, Deploy
 group :development do
+  gem 'irb'
   gem 'capistrano', '>= 3'
   gem 'capistrano-bundler'
   gem 'capistrano-rbenv'
   gem 'capistrano-rails'
   gem 'capistrano-passenger'
   gem 'webrick'
+  #gem 'passenger'
 end
