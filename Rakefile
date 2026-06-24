@@ -45,7 +45,7 @@ task :release do
   if $stdin.gets.chomp == "y"
     sh "git ci -am '#{v}'"
     sh "git tag '#{v}'"
-    sh "git push origin master --tags"
+    sh "git push origin main --tags"
     sh "bundle exec cap production deploy"
   end
 end
